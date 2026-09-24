@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: BookStore_ManagementSystem
+  datasource:
+    url: jdbc:mysql://localhost:3306/BookStoreSystem?createDatabaseIfNotExist=true
+    username: root
+    password: "@Raneesha2006"
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
