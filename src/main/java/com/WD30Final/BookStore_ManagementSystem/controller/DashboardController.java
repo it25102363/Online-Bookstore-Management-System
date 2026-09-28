@@ -1,9 +1,9 @@
 package com.WD30Final.BookStore_ManagementSystem.controller;
 
-import com.WD30.BookStore_System.entity.Admin;
-import com.WD30.BookStore_System.entity.Customer;
-import com.WD30.BookStore_System.entity.User;
-import com.WD30.BookStore_System.services.UserService;
+
+import com.WD30Final.BookStore_ManagementSystem.entity.Admin;
+import com.WD30Final.BookStore_ManagementSystem.entity.User;
+import com.WD30Final.BookStore_ManagementSystem.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
