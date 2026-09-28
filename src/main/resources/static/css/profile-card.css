@@ -1,0 +1,228 @@
+/* profile-card.css — Matching Reference Dark Charcoal & Warm Amber Theme */
+
+/* ---------- Interactive Dark Charcoal & Muted Amber Background Container ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #121417; /* Matches the base charcoal tone from the screenshot */
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(53, 46, 38, 0.4) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(26, 29, 33, 0.8) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(18, 20, 23, 0.95) 100%);
+  position: relative;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* Background Glowing Blobs (Muted brownish-gold/amber undertones) */
+body::before,
+body::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  filter: blur(90px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  animation: floatBlobs 12s infinite alternate ease-in-out;
+}
+
+body::before {
+  background: #3a3227; /* Muted warm brown/gold blob */
+  top: -60px;
+  left: -60px;
+}
+
+body::after {
+  background: #1f242b; /* Deep charcoal/slate blob */
+  bottom: -60px;
+  right: -60px;
+  animation-delay: -6s;
+}
+
+@keyframes floatBlobs {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(35px, 25px) scale(1.1); }
+}
+
+/* ---------- Extended Profile Card Wrapper & Layout ---------- */
+
+.profile-card-wrapper {
+  width: min(480px, 100%);
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.profile-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(22, 25, 29, 0.85); /* Matches card dark charcoal tone */
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: var(--radius-card, 32px);
+  overflow: hidden;
+  box-shadow:
+    0 35px 90px -20px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Banner Header ---------- */
+
+.profile-banner {
+  width: 100%;
+  height: 180px;
+  position: relative;
+  background-color: #1a1d21;
+  overflow: hidden;
+}
+
+.profile-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.8);
+}
+
+/* ---------- Overlapping Avatar Circle with Hover Effect ---------- */
+
+.profile-avatar-container {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  margin-top: -46px;
+  margin-left: 36px;
+  border-radius: 50%;
+  border: 4px solid rgba(22, 25, 29, 0.95);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+  background: #1a1d21;
+  z-index: 3;
+  cursor: pointer;
+}
+
+.profile-avatar-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  text-align: center;
+  padding: 4px;
+}
+
+.avatar-overlay span {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.profile-avatar-container:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.profile-avatar-container:hover img {
+  transform: scale(1.05);
+}
+
+/* ---------- Form Container ---------- */
+
+.profile-content {
+  padding: 20px 40px 40px 40px;
+}
+
+.profile-content h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: #f3efe6;
+  margin-top: 0;
+  margin-bottom: 22px;
+}
+
+.profile-content input[type="text"],
+.profile-content input[type="email"] {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 10px 0 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-field, 14px);
+  background: rgba(30, 34, 40, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 15px;
+  font-family: inherit;
+  color: #f3efe6;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.profile-content input[type="text"]::placeholder,
+.profile-content input[type="email"]::placeholder {
+  color: rgba(160, 155, 148, 0.5);
+}
+
+.profile-content input[type="text"]:focus,
+.profile-content input[type="email"]:focus {
+  outline: none;
+  border-color: #d4af37; /* Warm amber/gold highlight from image */
+  background: rgba(35, 40, 48, 0.85);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+}
+
+/* ---------- Glassmorphism Action Button ---------- */
+
+.profile-content button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 8px;
+  border-radius: var(--radius-field, 14px);
+
+  /* Glassmorphism Styling with Amber/Gold tint matching screenshot */
+  background: rgba(212, 175, 55, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+
+  color: #d4af37;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s ease;
+}
+
+.profile-content button:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: rgba(212, 175, 55, 0.65);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px -8px rgba(212, 175, 55, 0.25);
+}
+
+.profile-content button:active {
+  transform: translateY(0);
+}
