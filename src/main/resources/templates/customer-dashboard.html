@@ -13,11 +13,16 @@
     <style>
         :root {
             --gold: #e9b44c;
-            --ink: #07090f;
+            --ink: #05060a;
             --line: rgba(255,255,255,.10);
         }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--ink); }
         .font-serif { font-family: 'Instrument Serif', Georgia, serif; }
+
+        /* The old dashboard.css tint/fade overlays were built for the photo hero.
+           Switch them off here so the Mood Field shows its true colours. */
+        .main-content::before,
+        .main-content::after { display: none; }
 
         /* One glass style, used consistently */
         .glass {
@@ -28,12 +33,15 @@
             box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 24px 48px -24px rgba(0,0,0,.6);
         }
 
-        /* Readability layer over the video */
-        .video-shade {
-            position: absolute; inset: 0; pointer-events: none;
+        /* Mood Field sits behind everything in the hero */
+        #mood-field { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+
+        /* Readability layer over the effect */
+        .hero-shade {
+            position: absolute; inset: 0; pointer-events: none; z-index: 1;
             background:
-                linear-gradient(180deg, rgba(7,9,15,.85) 0%, rgba(7,9,15,.35) 38%, rgba(7,9,15,0) 65%),
-                linear-gradient(90deg, rgba(7,9,15,.55) 0%, rgba(7,9,15,0) 55%);
+                linear-gradient(180deg, rgba(5,6,10,.80) 0%, rgba(5,6,10,.30) 38%, rgba(5,6,10,0) 65%),
+                linear-gradient(90deg, rgba(5,6,10,.45) 0%, rgba(5,6,10,0) 55%);
         }
 
         .stat:hover { border-color: rgba(255,255,255,.22); }
@@ -47,12 +55,11 @@
             background: linear-gradient(160deg, #1d3a4f 0%, #0d1b2a 100%);
             box-shadow: -6px 10px 24px rgba(0,0,0,.55), inset 3px 0 0 rgba(255,255,255,.12);
         }
-        @media (prefers-reduced-motion: reduce) { video { display: none; } }
     </style>
 </head>
 <body class="text-white">
 
-<!-- Side Menu (unchanged structure, logo icon path fixed) -->
+<!-- Side Menu (unchanged) -->
 <div class="sidebar">
     <div class="sidebar-top">
         <div class="logo-area">
@@ -81,10 +88,15 @@
 <div class="main-content" style="padding:0; background:var(--ink); min-height:100vh; position:relative;">
     <section class="relative min-h-screen overflow-hidden flex flex-col">
 
-        <video id="hero-video" class="absolute inset-0 w-full h-full object-cover object-bottom"
-               style="opacity:0;" muted autoplay playsinline preload="auto"
-               src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_074625_a81f018a-956b-43fb-9aee-4d1508e30e6a.mp4"></video>
-        <div class="video-shade"></div>
+        <!-- Mood Field effect (replaces the video). Try data-mood="calm" for the blue state. -->
+        <div id="mood-field"
+             data-mood="intense"
+             data-background="#3B0A12"
+             data-intense-color="#B0303C"
+             data-calm-color="#2f6bff"
+             data-swirl="90"
+             data-reach="260"></div>
+        <div class="hero-shade"></div>
 
         <div class="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-10 pt-10 flex flex-col flex-1">
 
@@ -101,7 +113,7 @@
                 </a>
             </header>
 
-            <!-- Stats: equal size, same anatomy -->
+            <!-- Stats -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
                 <a th:href="@{/books}" class="stat glass rounded-xl p-5 block">
                     <p class="text-sm text-white/55">Books in library</p>
@@ -121,21 +133,19 @@
                 </a>
             </div>
 
-            <!-- Featured book, left-aligned so the video's subject stays visible -->
+            <!-- Featured book -->
             <div class="mt-auto pt-16 pb-6 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4">
-
                 <div class="glass rounded-xl p-5 w-full lg:max-w-md flex gap-5 items-center">
                     <div class="cover relative w-28 h-44 rounded-md overflow-hidden shrink-0 flex items-end p-2">
-                        <!-- Cover image: static/images/silent-orchard.svg (swap for a .jpg if you like) -->
                         <span class="font-serif italic text-xs leading-tight text-white/80">Harry Potter</span>
-                        <img th:src="@{/images/harry.jpg}" alt="harry"
+                        <img th:src="@{/images/wimpy.jpg}" alt="wimpy"
                              class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
                     </div>
                     <div class="min-w-0">
                         <span class="inline-block text-[11px] font-medium normal-case tracking-normal text-amber-300 bg-amber-400/15 rounded-full px-2.5 py-0.5 mb-2">Featured this season</span>
-                        <h2 class="font-serif text-2xl leading-tight">Harry Potter</h2>
+                        <h2 class="font-serif text-2xl leading-tight">Wimpy Kid</h2>
                         <p class="text-sm text-white/60 mt-2 leading-relaxed">
-                            Prisoner of Azkaban
+                            Diary Of A Wimpy Kid
                         </p>
                     </div>
                 </div>
@@ -153,32 +163,8 @@
         document.getElementById("today").textContent =
             new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
     })();
-
-    // Video fade-in and seamless loop
-    document.addEventListener("DOMContentLoaded", function () {
-        const video = document.getElementById("hero-video");
-        if (!video) return;
-        let raf = null;
-        function fade(from, to, ms) {
-            if (raf) cancelAnimationFrame(raf);
-            const t0 = performance.now();
-            (function step(now) {
-                const p = Math.min((now - t0) / ms, 1);
-                video.style.opacity = from + (to - from) * p;
-                if (p < 1) raf = requestAnimationFrame(step);
-            })(t0);
-        }
-        video.addEventListener("canplay", () => { video.play().catch(() => {}); fade(0, 1, 600); });
-        video.addEventListener("timeupdate", () => {
-            if (video.duration && video.duration - video.currentTime <= 0.55 && !video._out) {
-                video._out = true; fade(parseFloat(video.style.opacity) || 1, 0, 500);
-            }
-        });
-        video.addEventListener("ended", () => {
-            video.style.opacity = 0;
-            setTimeout(() => { video.currentTime = 0; video._out = false; video.play().catch(() => {}); fade(0, 1, 600); }, 100);
-        });
-    });
 </script>
+<!-- Put mood-field.js in src/main/resources/static/js/ -->
+<script th:src="@{/js/mood-field.js}" defer></script>
 </body>
 </html>
