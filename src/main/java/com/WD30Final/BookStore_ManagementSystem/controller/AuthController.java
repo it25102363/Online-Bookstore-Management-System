@@ -1,9 +1,9 @@
 package com.WD30Final.BookStore_ManagementSystem.controller;
 
-
 import com.WD30Final.BookStore_ManagementSystem.entity.Customer;
 import com.WD30Final.BookStore_ManagementSystem.services.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,9 +23,10 @@ public class AuthController {
         return "login";
     }
 
-    // Render the Register page
+    // Render the Register page and provide an empty Customer object for form binding
     @GetMapping("/register")
-    public String registerPage() {
+    public String registerPage(Model model) {
+        model.addAttribute("user", new Customer());
         return "register";
     }
 
