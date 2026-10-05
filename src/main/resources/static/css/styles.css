@@ -1,207 +1,481 @@
-/* profile-card.css — same theme as Sign In / Sign Up
-   Fonts and accents: #B89D7F (tan). Backgrounds: #3F1114 (burgundy) and its shades. */
+/* ==========================================
+   Global Styles & Variables
+   Bookstore theme: fonts and accents are #B89D7F (tan),
+   backgrounds are #3F1114 (burgundy) and its shades.
+   ========================================== */
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap');
 
 :root {
-  /* Fonts & accents */
-  --tan: #B89D7F;
-  --tan-light: #cdb698;
-  --tan-dim: #a18868;
+    /* The colour */
+    --tan: #B89D7F;
+    --tan-light: #cdb698;      /* hover / highlight tint */
+    --tan-dim: #a18868;        /* secondary text */
 
-  /* Backgrounds: #3F1114 and its shades */
-  --shade-900: #1d0709;
-  --shade-850: #240a0c;
-  --shade-800: #2e0d10;
-  --shade-700: #5a2529;
-  --shade-600: #3F1114;
-  --shade-500: #6a2227;
+    /* Background colour #3F1114 and its shades (darkest to lightest) */
+    --shade-900: #1d0709;      /* inputs, text on tan buttons */
+    --shade-850: #240a0c;      /* sidebar */
+    --shade-800: #2e0d10;      /* card */
+    --shade-700: #5a2529;      /* borders */
+    --shade-600: #3F1114;      /* base background colour */
+    --shade-500: #6a2227;      /* lighter shade, gradient end */
 
-  --font-body: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --bg-primary: var(--shade-600);
+    --card-bg: var(--shade-800);
+    --text-primary: var(--tan);
+    --text-secondary: var(--tan-dim);
+    --accent: var(--tan);
+    --accent-hover: var(--tan-light);
+    --accent-ink: var(--shade-900);
+    --border: var(--shade-700);
+    --border-focus: var(--tan);
+    --error-bg: rgba(205, 110, 90, 0.18);
+    --error-text: #e0a08f;
+    --success-bg: rgba(160, 180, 100, 0.16);
+    --success-text: #c3d195;
+    --radius: 16px;
+    --font-body: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --card-height: 600px; /* same on Sign In and Sign Up */
 }
 
-/* ---------- Page Background ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-body);
+}
+
 body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--shade-600) 0%, var(--shade-500) 100%) fixed;
-  color: var(--tan);
-  position: relative;
-  overflow-x: hidden;
-  font-family: var(--font-body);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
-/* ---------- Extended Profile Card Wrapper & Layout ---------- */
-
-.profile-card-wrapper {
-  width: min(480px, 100%);
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-  padding: 24px;
-  box-sizing: border-box;
+/* Sign In / Sign Up pages: #3F1114 fading to a lighter shade. Other pages keep solid #3F1114. */
+body:has(> .card) {
+    background: linear-gradient(135deg, var(--shade-600) 0%, var(--shade-500) 100%) fixed;
 }
 
-.profile-card {
-  position: relative;
-  z-index: 1;
-  background: rgba(46, 13, 16, 0.9);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border-radius: var(--radius-card, 32px);
-  overflow: hidden;
-  box-shadow:
-    0 35px 90px -20px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(184, 157, 127, 0.12);
-  border: 1px solid rgba(184, 157, 127, 0.4);
+/* Short windows: let the page scroll instead of clipping the card */
+@media (max-height: 700px) {
+    body {
+        overflow-y: auto;
+        align-items: flex-start;
+    }
 }
 
-/* ---------- Banner Header ---------- */
-
-.profile-banner {
-  width: 100%;
-  height: 180px;
-  position: relative;
-  background-color: var(--shade-850);
-  overflow: hidden;
+/* ==========================================
+   Ambient Background Glow Spheres (removed)
+   ========================================== */
+.ambient-glow {
+    display: none;
 }
 
-.profile-banner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: sepia(0.45) saturate(0.9) brightness(0.8);
+/* ==========================================
+   Main Split Card Layout (fixed size)
+   ========================================== */
+.card {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 76px 420px 480px;
+    grid-template-rows: 100%;
+    height: var(--card-height);
+    background-color: var(--card-bg);
+    border: 1px solid rgba(184, 157, 127, 0.4);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65);
+    overflow: hidden;
+    max-width: 980px;
+    width: 100%;
+    margin: 1.5rem;
 }
 
-/* ---------- Overlapping Avatar Circle with Hover Effect ---------- */
-
-.profile-avatar-container {
-  position: relative;
-  width: 92px;
-  height: 92px;
-  margin-top: -46px;
-  margin-left: 36px;
-  border-radius: 50%;
-  border: 4px solid var(--shade-800);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(184, 157, 127, 0.45);
-  overflow: hidden;
-  background: var(--shade-850);
-  z-index: 3;
-  cursor: pointer;
+/* ==========================================
+   Navigation Sidebar
+   ========================================== */
+.card-nav {
+    position: relative;
+    list-style: none;
+    background-color: var(--shade-850);
+    border-right: 1px solid rgba(184, 157, 127, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 0;
+    gap: 1.5rem;
 }
 
-.profile-avatar-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.2s ease;
+.logo-placeholder {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--tan-light), #a68c6d);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 4px 12px rgba(184, 157, 127, 0.3);
 }
 
-.avatar-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(29, 7, 9, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  text-align: center;
-  padding: 4px;
+.logo-placeholder svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--shade-900);
 }
 
-.avatar-overlay span {
-  color: var(--tan-light);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
+.card-nav li {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.profile-avatar-container:hover .avatar-overlay {
-  opacity: 1;
+/* The bar lives in the first <li>; let it position against the whole sidebar */
+.card-nav li:first-child {
+    position: static;
 }
 
-.profile-avatar-container:hover img {
-  transform: scale(1.05);
+.card-nav a {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    text-decoration: none;
 }
 
-/* ---------- Form Container ---------- */
-
-.profile-content {
-  padding: 20px 40px 40px 40px;
+.card-nav a svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
 }
 
-.profile-content h2 {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--tan);
-  margin-top: 0;
-  margin-bottom: 22px;
+.card-nav a:hover,
+.card-nav a.active {
+    background-color: rgba(184, 157, 127, 0.14);
+    color: var(--accent);
 }
 
-.profile-content input[type="text"],
-.profile-content input[type="email"] {
-  width: 100%;
-  padding: 14px 18px;
-  margin: 10px 0 20px 0;
-  border: 1px solid var(--shade-700);
-  border-radius: var(--radius-field, 14px);
-  background: var(--shade-900);
-  font-size: 15px;
-  font-family: inherit;
-  color: var(--tan);
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+.card-nav span {
+    display: none;
 }
 
-.profile-content input[type="text"]::placeholder,
-.profile-content input[type="email"]::placeholder {
-  color: #8c7561;
+/* Active bar sits beside the active icon and glides between them */
+.active-bar {
+    position: absolute;
+    left: 0;
+    top: 122px; /* Sign In */
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    background-color: var(--accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 12px rgba(184, 157, 127, 0.6);
+    transition: top 0.45s cubic-bezier(0.22, 0.7, 0.2, 1);
 }
 
-.profile-content input[type="text"]:focus,
-.profile-content input[type="email"]:focus {
-  outline: none;
-  border-color: var(--tan);
-  box-shadow: 0 0 0 4px rgba(184, 157, 127, 0.22);
+.card-nav:has(a.signup.active) .active-bar {
+    top: 190px; /* Sign Up */
 }
 
-/* ---------- Action Button (solid tan, matches Sign In) ---------- */
-
-.profile-content button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 8px;
-  border-radius: var(--radius-field, 14px);
-  background: var(--tan);
-  border: none;
-  color: var(--shade-900);
-  font-size: 16px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
-  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+/* ==========================================
+   Hero / Visual Panel
+   ========================================== */
+.card-hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5rem;
 }
 
-.profile-content button:hover {
-  background: var(--tan-light);
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px -8px rgba(184, 157, 127, 0.3);
+.hero-bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.55) saturate(0.9) contrast(1.05);
+    z-index: 0;
 }
 
-.profile-content button:active {
-  transform: translateY(0);
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(to top, rgba(29, 7, 9, 0.95) 15%, rgba(29, 7, 9, 0.35) 70%),
+        linear-gradient(135deg, rgba(106, 34, 39, 0.35), transparent 60%);
+    z-index: 1;
 }
 
-.profile-content button:focus-visible {
-  outline: 3px solid var(--tan-light);
-  outline-offset: 3px;
+.hero-glass-box {
+    position: relative;
+    z-index: 2;
+    min-height: 9.5rem;
+    background: rgba(29, 7, 9, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(184, 157, 127, 0.45);
+    padding: 1.5rem;
+    border-radius: 14px;
+}
+
+.badge-tag {
+    display: inline-block;
+    background-color: rgba(184, 157, 127, 0.16);
+    color: var(--tan);
+    border: 1px solid rgba(184, 157, 127, 0.5);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.04em;
+}
+
+.hero-glass-box h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+}
+
+.hero-glass-box h3 {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--tan-dim);
+    line-height: 1.5;
+}
+
+/* ==========================================
+   Form Panel
+   ========================================== */
+.card-form {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-header-area {
+    margin-bottom: 1.5rem;
+}
+
+.form-header-area h2 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+}
+
+.form-top {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+}
+
+.form-top a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+}
+
+.form-top a:hover {
+    color: var(--accent-hover);
+}
+
+/* Alerts */
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.alert.error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid rgba(205, 110, 90, 0.35);
+}
+
+.alert.success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid rgba(160, 180, 100, 0.35);
+}
+
+/* Form Groups & Inputs */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.forgot-link {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+.card-form input {
+    width: 100%;
+    background-color: var(--shade-900);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-form input::placeholder {
+    color: #8c7561;
+}
+
+.card-form input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(184, 157, 127, 0.25);
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    background-color: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}
+
+/* Ensure the arrow icon stays small and controlled */
+.submit-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
+.form-note {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 1.25rem;
+    line-height: 1.4;
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 860px) {
+    .card {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+        max-width: 460px;
+    }
+    .card-nav {
+        flex-direction: row;
+        justify-content: center;
+        padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid rgba(184, 157, 127, 0.3);
+    }
+    .card-form {
+        min-height: 560px; /* keeps both pages the same height */
+    }
+    .card-hero {
+        display: none;
+    }
+    .active-bar {
+        display: none;
+    }
+}
+
+/* Base Reset & Variables */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+/* Button utility classes */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    text-align: center;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-danger {
+    background-color: rgba(205, 110, 90, 0.22);
+    color: #e0a08f;
+    border: 1px solid rgba(205, 110, 90, 0.4);
+}
+
+.btn-danger:hover {
+    background-color: rgba(205, 110, 90, 0.38);
+    color: #efbfb1;
 }
