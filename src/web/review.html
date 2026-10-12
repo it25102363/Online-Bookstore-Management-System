@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Management</title>
+</head>
+<body>
+<h1>Book Reviews</h1>
+<form action="submitReview" method="post">
+    <label>Book ID:</label>
+    <input type="text" name="bookId">
+    <br><br>
+    <label>Rating (1-5):</label>
+    <input type="number" name="rating" min="1" max="5">
+    <br><br>
+    <label>Comment:</label>
+    <textarea name="comment"></textarea>
+    <br><br>
+    <button type="submit">Submit Review</button>
+</form>
+</body>
+</html>
