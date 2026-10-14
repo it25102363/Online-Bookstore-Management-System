@@ -1,216 +1,109 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard - Bookstore</title>
-    <!-- Import Google Fonts to match dashboard styling -->
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <style>
-        /* Fix sidebar box-sizing and padding so the logout button stays fully inside the viewport */
-        .sidebar {
-            box-sizing: border-box !important;
-            padding: 1.5rem 1rem 1.5rem 1rem !important;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        /* Dashboard layout & table styling matching the cinematic theme */
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-        }
-
-        .dashboard-container {
-            padding: 2.5rem;
-            max-width: 1400px;
-        }
-
-        .welcome-header {
-            margin-bottom: 2rem;
-        }
-
-        .date-label {
-            font-family: 'Lora', Georgia, serif;
-            color: #94a3b8;
-            font-size: 0.95rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .welcome-header h1 {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-size: 2.75rem;
-            font-weight: 400;
-            color: #ffffff;
-            letter-spacing: 0.01em;
-        }
-
-        /* Stats Grid Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .stat-card {
-            background-color: #121217;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .stat-card .label {
-            font-family: 'Lora', Georgia, serif;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        .stat-card .value {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-size: 2.25rem;
-            font-weight: 400;
-            color: #ffffff;
-        }
-
-        /* Hero User Table Section */
-        .hero-section {
-            background-color: #121217;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-section h2 {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-size: 1.85rem;
-            font-weight: 400;
-            color: #ffffff;
-            margin-bottom: 1.25rem;
-        }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.95rem;
-        }
-
-        th {
-            font-family: 'Lora', Georgia, serif;
-            color: #94a3b8;
-            font-weight: 500;
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: #e2e8f0;
-        }
-
-        tr:hover td {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-
-        /* Action Buttons inside table */
-        .btn-delete {
-            background-color: rgba(185, 28, 28, 0.2);
-            color: #f87171;
-            border: 1px solid rgba(185, 28, 28, 0.4);
-            padding: 0.4rem 0.8rem;
-            border-radius: 0.375rem;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-delete:hover {
-            background-color: #b91c1c;
-            color: #ffffff;
-        }
-    </style>
 </head>
 <body>
 
-<!-- Sidebar Component with Inventory, Services, and Feedback added -->
+<!-- Sidebar -->
 <aside class="sidebar">
     <div class="sidebar-top">
         <div class="logo-area">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/>
+                <path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/>
+            </svg>
             Bookstore
         </div>
-        <ul class="sidebar-menu">
-            <li><a href="/admin/dashboard" class="active">Home</a></li>
-            <li><a href="/admin/inventory">Inventory</a></li>
-            <li><a href="/admin/services">Services</a></li>
-            <li><a href="/admin/feedback">Feedback</a></li>
-        </ul>
+        <div>
+            <p class="sidebar-label">Manage</p>
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/admin/dashboard}" class="active">
+                    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a></li>
+                <li><a th:href="@{/books}">
+                    <svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg>Inventory</a></li>
+                <li><a th:href="@{/admin/feedback}">
+                    <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></svg>Feedback</a></li>
+            </ul>
+        </div>
     </div>
     <div class="sidebar-bottom">
         <form th:action="@{/logout}" method="post">
-            <button type="submit" class="btn-danger">Logout</button>
+            <button type="submit" class="btn-danger" style="width:100%; cursor:pointer;">Logout</button>
         </form>
     </div>
 </aside>
 
-<!-- Main Content Wrapper -->
+<!-- Main content -->
 <main class="main-content">
-    <div class="dashboard-container">
+    <div class="page">
 
-        <!-- Header section with default name fallback -->
-        <div class="welcome-header">
-            <div class="date-label">Monday, September 28</div>
-            <h1>Good afternoon, <span th:text="${user != null ? user.name : 'System Admin'}">System Admin</span></h1>
-        </div>
+        <header class="page-head">
+            <div>
+                <p class="eyebrow" id="today"></p>
+                <h1><span id="greeting">Welcome back</span>, <span class="accent" th:text="${user != null ? user.name : 'System Admin'}">System Admin</span></h1>
+                <p class="page-sub">Here is how your bookstore is doing today.</p>
+            </div>
+            <a th:href="@{/books}" class="btn-primary">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Manage inventory
+            </a>
+        </header>
 
-        <!-- Stats Grid Cards with safe fallback default counts -->
+        <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <span class="label">Total Users</span>
+                <div class="stat-top"><span class="label">Total Users</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 5a3.5 3.5 0 0 1 0 7M18 14.8c2.2.6 3.5 2.3 3.5 5.2"/></svg></span></div>
                 <span class="value" th:text="${totalUsers != null ? totalUsers : 4}">4</span>
             </div>
             <div class="stat-card">
-                <span class="label">Books in library</span>
+                <div class="stat-top"><span class="label">Books in library</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg></span></div>
                 <span class="value" th:text="${totalBooks != null ? totalBooks : 10}">10</span>
             </div>
             <div class="stat-card">
-                <span class="label">Total Orders</span>
+                <div class="stat-top"><span class="label">Total Orders</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/></svg></span></div>
                 <span class="value" th:text="${totalOrders != null ? totalOrders : 0}">0</span>
             </div>
             <div class="stat-card">
-                <span class="label">System Role</span>
-                <span class="value" style="font-size: 1.5rem; padding-top: 0.4rem;">ADMIN</span>
+                <div class="stat-top"><span class="label">System Role</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3z"/></svg></span></div>
+                <span class="value" style="font-size:1.6rem; padding-top:0.35rem;">ADMIN</span>
             </div>
         </div>
 
-        <!-- Hero Section Displaying the User Table Upfront -->
-        <section class="hero-section">
-            <h2>User Management (CRUD Overview)</h2>
+        <!-- Quick links -->
+        <div class="quick">
+            <a th:href="@{/books}" class="quick-card">
+                <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg></span>
+                <div><strong>Inventory</strong><small>Add, edit and remove books</small></div>
+            </a>
+            <a th:href="@{/admin/services}" class="quick-card">
+                <span class="stat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></span>
+                <div><strong>Services</strong><small>Manage store services</small></div>
+            </a>
+            <a th:href="@{/admin/feedback}" class="quick-card">
+                <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></svg></span>
+                <div><strong>Feedback</strong><small>Read what customers say</small></div>
+            </a>
+        </div>
+
+        <!-- User management -->
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>User Management</h2>
+                    <p>CRUD overview of every registered account</p>
+                </div>
+                <input id="userSearch" class="search" type="search" placeholder="Search name, email or role" aria-label="Search users">
+            </div>
             <div class="table-responsive">
-                <table>
+                <table class="data-table" id="userTable">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -223,17 +116,17 @@
                     <tbody>
                     <tr th:each="u : ${users}">
                         <td th:text="${u.id}">1</td>
-                        <td th:text="${u.name}">John Doe</td>
+                        <td class="cell-name"><span class="name" th:text="${u.name}">John Doe</span></td>
                         <td th:text="${u.email}">john@example.com</td>
-                        <td th:text="${u.class.simpleName}">CUSTOMER</td>
+                        <td><span class="role" th:text="${u.class.simpleName}">CUSTOMER</span></td>
                         <td>
                             <form th:action="@{/admin/users/delete/{id}(id=${u.id})}" method="post" style="display:inline;">
                                 <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
                             </form>
                         </td>
                     </tr>
-                    <tr th:if="${users == null or users.empty}">
-                        <td colspan="5" style="text-align: center; color: #64748b; padding: 2rem;">No registered users found.</td>
+                    <tr class="empty-row" th:if="${users == null or users.empty}">
+                        <td colspan="5" style="text-align:center; padding:2rem;">No registered users found.</td>
                     </tr>
                     </tbody>
                 </table>
@@ -243,5 +136,38 @@
     </div>
 </main>
 
+<script>
+    (function () {
+        // Greeting + date
+        var h = new Date().getHours();
+        document.getElementById("greeting").textContent =
+            h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+        document.getElementById("today").textContent =
+            new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+
+        // Avatar initials + role badge colours
+        var rows = document.querySelectorAll("#userTable tbody tr:not(.empty-row)");
+        rows.forEach(function (tr) {
+            var cell = tr.querySelector(".cell-name");
+            if (cell) {
+                var av = document.createElement("span");
+                av.className = "avatar";
+                av.textContent = (cell.textContent.trim().charAt(0) || "?").toUpperCase();
+                cell.insertBefore(av, cell.firstChild);
+            }
+            var role = tr.querySelector(".role");
+            if (role && /admin/i.test(role.textContent)) role.classList.add("role-admin");
+        });
+
+        // Live search
+        var box = document.getElementById("userSearch");
+        box.addEventListener("input", function () {
+            var q = box.value.trim().toLowerCase();
+            rows.forEach(function (tr) {
+                tr.style.display = tr.textContent.toLowerCase().indexOf(q) === -1 ? "none" : "";
+            });
+        });
+    })();
+</script>
 </body>
 </html>

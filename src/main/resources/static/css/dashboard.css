@@ -1,209 +1,202 @@
-/* Dashboard layout — same theme as Sign In / Sign Up
-   Fonts and accents: #B89D7F (tan). Backgrounds: #3F1114 (burgundy) and its shades. */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap');
+/* Dashboard shell: sidebar, page header, stat cards, panels, tables.
+   Theme: "Midnight Library" (ink navy, paper cream, brass gold, Venice/Rock Blue). */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap');
 
 :root {
     --sidebar-width: 260px;
 
-    /* Fonts & accents */
-    --tan: #B89D7F;
-    --tan-light: #cdb698;
-    --tan-dim: #a18868;
+    --venice: #16587B;  --rock: #84B3CE;
+    --shade-900: #050f1a;  --shade-850: #081727;  --shade-800: #0e2842;
+    --shade-700: #1e4467;  --shade-600: #0a2036;  --shade-500: #14507a;
+    --cream: #f3ecdc;  --mist: #9db6cb;  --mist-dim: #6f8aa3;
+    --gold: #dcae55;   --gold-light: #ecc983;  --gold-dim: #b58c3c;
+    --line: rgba(157, 182, 203, 0.16);
 
-    /* Backgrounds: #3F1114 and its shades */
-    --shade-900: #1d0709;
-    --shade-850: #240a0c;
-    --shade-800: #2e0d10;
-    --shade-700: #5a2529;
-    --shade-600: #3F1114;
-    --shade-500: #6a2227;
+    /* legacy aliases */
+    --tan: var(--cream);  --tan-light: #fff7e6;  --tan-dim: var(--mist);
 
     --font-body: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
     --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 }
 
-/* Sidebar Styling */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--sidebar-width);
-    height: 100vh;
-    background-color: var(--shade-850);
-    border-right: 1px solid rgba(184, 157, 127, 0.3);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 50;
-    padding: 1.5rem 1rem;
+body:has(> .sidebar) {
+    display: block; min-height: 100vh; margin: 0;
+    background: var(--shade-600); color: var(--cream);
+    font-family: var(--font-body);
+    overflow-x: hidden; overflow-y: auto;
 }
 
-.sidebar-top {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+/* ---------- Sidebar ---------- */
+.sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-width); box-sizing: border-box;
+    background: linear-gradient(180deg, var(--shade-850) 0%, var(--shade-900) 100%);
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; justify-content: space-between;
+    z-index: 50; padding: 1.5rem 1rem;
 }
+.sidebar-top { display: flex; flex-direction: column; gap: 2rem; }
 
 .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--tan);
-    padding-left: 0.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    font-family: var(--font-display); font-size: 1.45rem; font-weight: 600;
+    color: var(--cream); padding: 0 0.5rem;
 }
-
 .logo-area svg {
-    width: 28px;
-    height: 28px;
-    fill: var(--tan);
+    width: 36px; height: 36px; padding: 7px; flex-shrink: 0;
+    border-radius: 11px; fill: var(--shade-900);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dim));
+    box-shadow: 0 6px 16px rgba(220, 174, 85, 0.3);
 }
 
-.sidebar-menu {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+.sidebar-label {
+    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--mist-dim); padding: 0 1rem; margin-bottom: 0.6rem; font-weight: 700;
 }
-
+.sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; margin: 0; padding: 0; }
 .sidebar-menu li a {
-    display: block;
-    padding: 0.75rem 1rem;
-    color: var(--tan-dim);
-    text-decoration: none;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
+    position: relative;
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.7rem 1rem; color: var(--mist); text-decoration: none;
+    font-family: var(--font-body); font-size: 0.95rem; font-weight: 500;
+    border-radius: 0.6rem; transition: all 0.2s ease;
+}
+.sidebar-menu li a svg {
+    width: 18px; height: 18px; flex-shrink: 0;
+    fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.sidebar-menu li a:hover { color: var(--cream); background-color: rgba(132, 179, 206, 0.08); }
+.sidebar-menu li a.active { color: var(--gold-light); background-color: rgba(220, 174, 85, 0.10); }
+.sidebar-menu li a.active::before {
+    content: ''; position: absolute; left: -1rem; top: 20%; bottom: 20%; width: 3px;
+    background: var(--gold); border-radius: 0 3px 3px 0; box-shadow: 0 0 12px rgba(220, 174, 85, 0.6);
 }
 
-.sidebar-menu li a:hover,
-.sidebar-menu li a.active {
-    color: var(--tan);
-    background-color: rgba(184, 157, 127, 0.14);
-}
-
-.sidebar-menu li a.active {
-    box-shadow: inset 3px 0 0 var(--tan);
-}
-
-.sidebar-bottom {
-    padding-top: 1rem;
-    border-top: 1px solid rgba(184, 157, 127, 0.3);
-}
-
-/* Logout button (muted red so it still reads as a warning) */
+.sidebar-bottom { padding-top: 1rem; border-top: 1px solid var(--line); }
 .sidebar .btn-danger {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    background-color: #7d2a2e;
-    color: var(--tan-light);
-    border: 1px solid rgba(205, 110, 90, 0.35);
-    border-radius: 0.5rem;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    width: 100%; padding: 0.7rem 1rem;
+    background-color: rgba(224, 112, 98, 0.12); color: #f0a898;
+    border: 1px solid rgba(224, 112, 98, 0.35); border-radius: 0.6rem;
+    font-family: var(--font-body); font-size: 0.92rem; font-weight: 600;
+    cursor: pointer; transition: background-color 0.2s ease, color 0.2s;
 }
+.sidebar .btn-danger:hover { background-color: rgba(224, 112, 98, 0.28); color: #ffd2c8; }
+.sidebar .btn-danger:focus-visible, .sidebar-menu a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
-.sidebar .btn-danger:hover {
-    background-color: #a63a3c;
-    color: #f3e6d2;
-}
-
-.sidebar .btn-danger:focus-visible {
-    outline: 2px solid var(--tan-light);
-    outline-offset: 2px;
-}
-
-/* Main Content Wrapper */
+/* ---------- Main area ---------- */
 .main-content {
-    margin-left: var(--sidebar-width);
-    min-height: 100vh;
-    background-color: var(--shade-600);
-    color: var(--tan);
-    font-family: var(--font-body);
-    position: relative;
+    margin-left: var(--sidebar-width); min-height: 100vh;
+    background:
+        radial-gradient(60% 40% at 90% 0%, rgba(22, 88, 123, 0.35), transparent 70%),
+        var(--shade-600);
+    color: var(--cream); font-family: var(--font-body);
+    position: relative; isolation: isolate;
 }
 
-/* ==========================================
-   Hero image recolour (burgundy and tan)
-   Recolours the existing night-sky photo with two overlays,
-   so the sparkles and glow stay but the blues become theme colours.
-   Adjust the three tint values to taste.
-   ========================================== */
-:root {
-    --hero-tint-top: #7a2228;     /* burgundy */
-    --hero-tint-mid: #9a5a4a;     /* warm rose-brown */
-    --hero-tint-bottom: #B89D7F;  /* tan */
+/* ---------- Page header (admin and other management pages) ---------- */
+.page { padding: 2.5rem; max-width: 1400px; }
+.page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 2rem; }
+.eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+.page-head h1 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 600; line-height: 1.1; color: var(--cream); }
+.page-head h1 .accent { color: var(--gold-light); }
+.page-sub { color: var(--mist); font-size: 0.95rem; margin-top: 0.5rem; }
+
+/* ---------- Stat cards ---------- */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; margin-bottom: 1.5rem; }
+.stat-card {
+    background: linear-gradient(180deg, rgba(20, 56, 90, 0.55), rgba(14, 40, 66, 0.75));
+    border: 1px solid var(--line); border-radius: 0.9rem; padding: 1.35rem;
+    display: flex; flex-direction: column; gap: 0.6rem;
+    position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s;
 }
-
-.main-content {
-    isolation: isolate; /* blend modes only affect this area, never the sidebar */
+.stat-card::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0.8;
 }
-
-/* 1. Swap the photo's blue hues for burgundy -> tan, keeping its light and dark */
-.main-content::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(180deg,
-        var(--hero-tint-top) 0%,
-        var(--hero-tint-mid) 55%,
-        var(--hero-tint-bottom) 100%);
-    mix-blend-mode: color;
+.stat-card:hover { border-color: rgba(220, 174, 85, 0.4); transform: translateY(-2px); }
+.stat-top { display: flex; align-items: center; justify-content: space-between; }
+.stat-card .label { color: var(--mist); font-size: 0.85rem; font-weight: 500; }
+.stat-ico {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: grid; place-items: center;
+    background: rgba(132, 179, 206, 0.12); color: var(--rock);
 }
+.stat-ico svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.stat-card .value { font-family: var(--font-display); font-size: 2.3rem; font-weight: 600; color: var(--cream); line-height: 1; }
 
-/* 2. Fade the top into the page colour so the heading and stat cards sit on solid #3F1114 */
-.main-content::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(180deg,
-        rgba(63, 17, 20, 0.95) 0%,
-        rgba(63, 17, 20, 0.7) 30%,
-        rgba(63, 17, 20, 0) 65%);
+/* ---------- Quick links ---------- */
+.quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.1rem; margin-bottom: 1.5rem; }
+.quick-card {
+    display: flex; align-items: center; gap: 0.9rem; text-decoration: none;
+    padding: 1rem 1.1rem; border-radius: 0.9rem;
+    background: rgba(14, 40, 66, 0.6); border: 1px solid var(--line);
+    color: var(--cream); transition: border-color 0.2s, background 0.2s, transform 0.2s;
 }
+.quick-card:hover { border-color: rgba(220, 174, 85, 0.45); background: rgba(20, 56, 90, 0.7); transform: translateY(-2px); }
+.quick-card .stat-ico { background: rgba(220, 174, 85, 0.12); color: var(--gold); }
+.quick-card strong { display: block; font-size: 0.95rem; font-weight: 600; }
+.quick-card small { color: var(--mist); font-size: 0.8rem; }
 
-/* Keep all page content above the two overlays */
-.main-content > * {
-    position: relative;
-    z-index: 2;
+/* ---------- Panel + table ---------- */
+.panel {
+    background: rgba(14, 40, 66, 0.7); border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    border-radius: 1rem; padding: 1.75rem;
+    box-shadow: 0 24px 50px -28px rgba(0, 0, 0, 0.8);
 }
-
-/* ==========================================
-   Hero motion
-   ========================================== */
-
-/* Sparkle canvas added by hero-motion.js: between the recoloured photo and the top fade */
-.main-content > .hero-motion {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-    mix-blend-mode: screen;
+.panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.panel-head h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--cream); }
+.panel-head p { color: var(--mist); font-size: 0.85rem; margin-top: 0.15rem; }
+.search {
+    min-width: 240px; background: var(--shade-900); color: var(--cream);
+    border: 1px solid var(--shade-700); border-radius: 10px; padding: 0.6rem 0.9rem;
+    font-size: 0.9rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
 }
+.search::placeholder { color: var(--mist-dim); }
+.search:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(220, 174, 85, 0.2); }
 
-/* The tint slowly drifts, so the glow in the photo seems to shift and breathe */
-@media (prefers-reduced-motion: no-preference) {
-    .main-content::before {
-        background-size: 100% 170%;
-        animation: heroTintDrift 26s ease-in-out infinite alternate;
-    }
+.table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+.data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem; }
+.data-table th {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--mist-dim); padding: 0.9rem 1rem; background: var(--shade-850);
+    border-bottom: 1px solid var(--line);
 }
+.data-table td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--line); color: var(--mist); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover td { background: rgba(132, 179, 206, 0.06); }
+.data-table .name { color: var(--cream); font-weight: 600; }
+.cell-name { display: flex; align-items: center; gap: 0.7rem; }
+.avatar {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; font-weight: 700; font-size: 0.85rem;
+    background: linear-gradient(135deg, var(--venice), var(--shade-500)); color: var(--cream);
+    border: 1px solid rgba(132, 179, 206, 0.35);
+}
+.role { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+        background: rgba(132, 179, 206, 0.14); color: var(--rock); border: 1px solid rgba(132, 179, 206, 0.3); }
+.role-admin { background: rgba(220, 174, 85, 0.14); color: var(--gold-light); border-color: rgba(220, 174, 85, 0.4); }
 
-@keyframes heroTintDrift {
-    from { background-position: 0 0; }
-    to   { background-position: 0 100%; }
+.btn-primary {
+    background-color: var(--gold); color: var(--shade-900);
+    padding: 0.65rem 1.2rem; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+    display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s; box-shadow: 0 8px 20px -10px rgba(220, 174, 85, 0.6);
+}
+.btn-primary:hover { background-color: var(--gold-light); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.btn-delete {
+    background-color: rgba(224, 112, 98, 0.14); color: #f0a898;
+    border: 1px solid rgba(224, 112, 98, 0.4); padding: 0.4rem 0.85rem; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+}
+.btn-delete:hover { background-color: #b9382b; color: #fff; border-color: #b9382b; }
+
+@media (max-width: 860px) {
+    .sidebar { position: static; width: auto; }
+    .main-content { margin-left: 0; }
+    .page { padding: 1.25rem; }
 }
