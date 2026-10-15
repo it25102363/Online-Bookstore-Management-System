@@ -1,3 +1,7 @@
+gemini:
+    api:
+      key: AQ.Ab8RN6KAVsHqSsHBVHK3ht9QxKaJPtrqZPruSxT5GzwXTX3a-w
+
 spring:
   application:
     name: BookStore_ManagementSystem

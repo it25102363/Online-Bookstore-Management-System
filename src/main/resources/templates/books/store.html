@@ -33,6 +33,8 @@
                 Cart
             </a>
 
+            <a th:href="@{/books/ai-recommendations}" class="nav-item" style="color: var(--gold); font-weight: 600;">✨ AI Matchmaker</a>
+
             <!-- Unlocked ONLY for Authenticated Admins -->
             <div sec:authorize="hasRole('ADMIN')" class="admin-badge-wrapper">
                 <a th:href="@{/admin/books}" class="btn-admin-pill">

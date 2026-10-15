@@ -1,8 +1,7 @@
 package com.WD30Final.BookStore_ManagementSystem.controller;
-import java.security.Principal;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.WD30Final.BookStore_ManagementSystem.entity.Book;
+import com.WD30Final.BookStore_ManagementSystem.services.AiRecommendationService;
 import com.WD30Final.BookStore_ManagementSystem.services.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,7 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     private final BookService bookService;
+    private final AiRecommendationService aiRecommendationService;
 
     @GetMapping
     public String viewStorefront(
@@ -49,20 +52,23 @@ public class BookController {
         return "books/store";
     }
 
+    @GetMapping("/ai-recommendations")
+    public String getAiRecommendations(@RequestParam(value = "prompt", required = false) String prompt,
+                                       Model model) {
+        if (prompt != null && !prompt.trim().isEmpty()) {
+            List<Book> recommendedBooks = aiRecommendationService.getRecommendations(prompt.trim());
+            model.addAttribute("books", recommendedBooks);
+            model.addAttribute("userPrompt", prompt);
+        }
+        model.addAttribute("categories", bookService.getAllCategories());
+        return "books/ai-recommend";
+    }
+
     @GetMapping("/{id}")
     public String viewBookDetails(@PathVariable Long id, Model model) {
         Book book = bookService.getBookById(id);
         model.addAttribute("book", book);
         return "books/details";
-    }
-    @PostMapping("/{id}/reviews")
-    public String submitReview(@PathVariable Long id,
-                               @RequestParam int rating,
-                               @RequestParam String comment,
-                               java.security.Principal principal) {
-        String username = (principal != null) ? principal.getName() : "Anonymous Reader";
-        bookService.addReviewToBook(id, rating, comment, username);
-        return "redirect:/books/" + id;
     }
 
     @PostMapping({"/{id}/review", "/{id}/reviews"})
@@ -80,6 +86,4 @@ public class BookController {
         }
         return "redirect:/books/" + id;
     }
-
-
 }
