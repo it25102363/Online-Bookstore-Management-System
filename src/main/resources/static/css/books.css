@@ -1,0 +1,765 @@
+/* ============================================================
+   BOOKSTORE DESIGN SYSTEM - NAVY & GOLD
+   ============================================================ */
+:root {
+    color-scheme: dark;
+    --bg: #0a1d34;
+    --bg-deep: #071526;
+    --surface: #0f2742;
+    --input: #08192d;
+    --line: rgba(255, 255, 255, .09);
+    --text: #f5f1e6;
+    --muted: #97abc2;
+    --blue: #6db4ea;
+    --gold: #e9b949;
+    --gold-hi: #f3cb69;
+    --gold-lo: #d4a030;
+    --on-gold: #1b1405;
+    --ok: #7fd1a0;
+    --low: #f0c36a;
+    --out: #f0a3a3;
+    --danger: #f0a3a3;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font: 400 1rem/1.65 var(--sans);
+    color: var(--muted);
+    background:
+            radial-gradient(1100px 520px at 78% -12%, #123a63 0%, transparent 62%),
+            var(--bg);
+    min-height: 100vh;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+h1, h2, h3 {
+    font-family: var(--serif);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.15;
+}
+
+.icon-inline {
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ============================================================
+   TOP NAVIGATION
+   ============================================================ */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(7, 21, 38, .85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 70px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font: 700 1.45rem var(--serif);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand svg {
+    width: 36px;
+    height: 36px;
+    padding: 7px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, var(--gold-hi), var(--gold-lo));
+    fill: #14233a;
+    box-shadow: 0 6px 18px rgba(233, 185, 73, .28);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.nav-item {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: .95rem;
+    transition: color .15s;
+}
+
+.nav-item:hover, .nav-item.active-nav {
+    color: var(--text);
+}
+
+.cart-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+}
+
+.admin-badge-wrapper, .user-auth-group, .guest-auth-group {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary, .btn-secondary, .btn-ghost, .btn-ghost-danger, .btn-admin-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .65rem 1.25rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font: 600 .92rem var(--sans);
+    text-decoration: none;
+    transition: background .18s, transform .18s, border-color .18s, box-shadow .18s;
+}
+
+.btn-primary {
+    border: 0;
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+    color: var(--on-gold);
+    box-shadow: 0 6px 20px rgba(233, 185, 73, .25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(233, 185, 73, .38);
+}
+
+.btn-primary:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-secondary {
+    border: 1px solid rgba(233, 185, 73, .55);
+    background: rgba(233, 185, 73, .08);
+    color: var(--gold-hi);
+}
+
+.btn-secondary:hover {
+    background: rgba(233, 185, 73, .16);
+    transform: translateY(-2px);
+}
+
+.btn-ghost {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .04);
+    color: var(--text);
+}
+
+.btn-ghost:hover {
+    border-color: rgba(233, 185, 73, .5);
+}
+
+.btn-ghost-danger {
+    border: 1px solid rgba(240, 163, 163, .3);
+    background: rgba(240, 163, 163, .08);
+    color: var(--danger);
+}
+
+.btn-ghost-danger:hover {
+    background: rgba(240, 163, 163, .16);
+}
+
+.btn-admin-pill {
+    padding: .45rem .85rem;
+    border: 1px solid rgba(233, 185, 73, .5);
+    border-radius: 999px;
+    background: rgba(233, 185, 73, .1);
+    color: var(--gold-hi);
+    font-size: .82rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.btn-admin-pill:hover {
+    background: rgba(233, 185, 73, .22);
+}
+
+.w-100 {
+    width: 100%;
+}
+
+/* ============================================================
+   CATALOG PAGE, SEARCH & FILTER PANEL
+   ============================================================ */
+.py-content {
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.page-head {
+    margin-bottom: 2rem;
+}
+
+.page-head h1 {
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    margin-bottom: .45rem;
+}
+
+.page-sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: .95rem;
+}
+
+.panel {
+    padding: 1.25rem 1.4rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .03), transparent), var(--surface);
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--gold);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem;
+    align-items: center;
+}
+
+.search {
+    padding: .75rem 1rem;
+    background: var(--input);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font: 400 .95rem var(--sans);
+}
+
+.filters input.search {
+    flex: 2;
+    min-width: 220px;
+}
+
+.filters select.search {
+    flex: 1;
+    min-width: 160px;
+}
+
+.filters-actions {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+}
+
+.reset-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: .9rem;
+    white-space: nowrap;
+}
+
+.reset-link:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+/* ============================================================
+   BOOK GRID & PRODUCT CARDS
+   ============================================================ */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.book-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-bottom: 2px solid var(--gold);
+    border-radius: 14px;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(233, 185, 73, .4);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+}
+
+.cover {
+    width: 100%;
+    height: 270px;
+    overflow: hidden;
+    background: var(--input);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .3s ease;
+}
+
+.book-card:hover .cover img {
+    transform: scale(1.03);
+}
+
+.no-cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    font-size: .85rem;
+    color: #6f85a0;
+}
+
+.no-cover svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+}
+
+.book-body {
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    flex: 1;
+}
+
+.book-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .35rem;
+}
+
+.role {
+    display: inline-block;
+    padding: .2rem .65rem;
+    border: 1px solid rgba(109, 180, 234, .45);
+    border-radius: 999px;
+    background: rgba(109, 180, 234, .12);
+    color: var(--blue);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+/* Star Rating SVG Constraint */
+.rating {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .85rem;
+    color: var(--gold);
+    margin: 0;
+}
+
+.rating svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
+    max-width: 14px;
+    max-height: 14px;
+    fill: var(--gold);
+    stroke: none;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.book-title {
+    margin: .1rem 0 .2rem;
+    font: 600 1.15rem/1.3 var(--serif);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.book-title a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.book-title a:hover {
+    color: var(--gold-hi);
+}
+
+.book-author {
+    margin: 0 0 .75rem 0;
+    font-size: .88rem;
+    color: var(--muted);
+}
+
+.book-foot {
+    margin-top: auto;
+    padding-top: .75rem;
+    display: grid;
+    gap: .65rem;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+
+.price {
+    font: 700 1.35rem var(--serif);
+    color: var(--gold);
+}
+
+.stock {
+    font-size: .78rem;
+    font-weight: 600;
+    padding: .2rem .55rem;
+    border-radius: 6px;
+}
+
+.stock.ok {
+    color: var(--ok);
+    background: rgba(127, 209, 160, .12);
+}
+
+.stock.low {
+    color: var(--low);
+    background: rgba(240, 195, 106, .12);
+}
+
+.stock.out {
+    color: var(--out);
+    background: rgba(240, 163, 163, .12);
+}
+
+.details-link {
+    display: block;
+    text-align: center;
+    font-size: .85rem;
+    color: var(--muted);
+    text-decoration: none;
+    margin-top: .4rem;
+}
+
+.details-link:hover {
+    color: var(--gold);
+    text-decoration: underline;
+}
+
+/* ============================================================
+   PAGINATION & EMPTY STATES
+   ============================================================ */
+.pagination-wrapper {
+    margin-top: 3.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    list-style: none;
+    display: flex;
+    gap: .4rem;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 .75rem;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    text-decoration: none;
+    font: 600 .85rem var(--sans);
+    transition: all .15s ease;
+}
+
+.pagination li.active a {
+    background: var(--gold);
+    color: var(--on-gold);
+    border-color: var(--gold);
+}
+
+.pagination li a:hover:not(.active) {
+    background: rgba(255, 255, 255, .08);
+    color: var(--text);
+}
+
+.pagination li.disabled a {
+    opacity: .35;
+    pointer-events: none;
+}
+
+.empty {
+    text-align: center;
+    padding: 4rem 1rem;
+}
+
+.empty-icon {
+    width: 52px;
+    height: 52px;
+    stroke: var(--muted);
+    fill: none;
+    stroke-width: 1.6;
+    margin-bottom: 1rem;
+}
+
+.empty h2 {
+    font-size: 1.6rem;
+    margin-bottom: .4rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+    margin-top: 4rem;
+    padding: 2.2rem 0;
+    border-top: 1px solid var(--line);
+    background: var(--bg-deep);
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.brand-mini {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font: 700 1.15rem var(--serif);
+    color: var(--text);
+}
+
+.brand-mini svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--gold);
+}
+
+.copyright {
+    margin: 0;
+    font-size: .88rem;
+    color: #627791;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filters input.search, .filters select.search {
+        width: 100%;
+        min-width: 0;
+    }
+    .nav-container {
+        height: auto;
+        padding-top: .8rem;
+        padding-bottom: .8rem;
+        flex-wrap: wrap;
+    }
+    /* ============================================================
+   INTERACTIVE STAR RATING PICKER
+   ============================================================ */
+    .star-rating-box {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .star-rating-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .interactive-stars {
+        display: inline-flex;
+        flex-direction: row-reverse; /* Reverses order so ~ selector lights up left-to-right */
+        justify-content: flex-end;
+        gap: 0.35rem;
+    }
+
+    .interactive-stars input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .interactive-stars label {
+        cursor: pointer;
+        padding: 0.2rem;
+        display: inline-flex;
+        align-items: center;
+        transition: transform 0.15s ease;
+    }
+
+    .interactive-stars label svg {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+        fill: rgba(255, 255, 255, 0.14); /* Unselected default state */
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 1.2;
+        transition: fill 0.2s ease, transform 0.15s ease, filter 0.2s ease;
+    }
+
+    .interactive-stars label:hover {
+        transform: scale(1.18);
+    }
+
+    /* Selected state: fill this star and every star before it */
+    .interactive-stars input[type="radio"]:checked ~ label svg {
+        fill: var(--gold);
+        stroke: none;
+        filter: drop-shadow(0 0 6px rgba(233, 185, 73, 0.45));
+    }
+
+    /* Hover state: fill stars up to hovered element */
+    .interactive-stars label:hover svg,
+    .interactive-stars label:hover ~ label svg {
+        fill: var(--gold-hi) !important;
+        stroke: none !important;
+        filter: drop-shadow(0 0 8px rgba(243, 203, 105, 0.6));
+    }
+
+    /* ============================================================
+   INTERACTIVE STAR RATING PICKER
+   ============================================================ */
+    .star-rating-box {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .star-rating-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .interactive-stars {
+        display: inline-flex;
+        flex-direction: row-reverse; /* Reverses order so ~ selector lights up left-to-right */
+        justify-content: flex-end;
+        gap: 0.35rem;
+    }
+
+    .interactive-stars input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .interactive-stars label {
+        cursor: pointer;
+        padding: 0.2rem;
+        display: inline-flex;
+        align-items: center;
+        transition: transform 0.15s ease;
+    }
+
+    .interactive-stars label svg {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+        fill: rgba(255, 255, 255, 0.14); /* Unselected default state */
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 1.2;
+        transition: fill 0.2s ease, transform 0.15s ease, filter 0.2s ease;
+    }
+
+    .interactive-stars label:hover {
+        transform: scale(1.18);
+    }
+
+    /* Selected state: fill this star and every star before it */
+    .interactive-stars input[type="radio"]:checked ~ label svg {
+        fill: var(--gold);
+        stroke: none;
+        filter: drop-shadow(0 0 6px rgba(233, 185, 73, 0.45));
+    }
+
+    /* Hover state: fill stars up to hovered element */
+    .interactive-stars label:hover svg,
+    .interactive-stars label:hover ~ label svg {
+        fill: var(--gold-hi) !important;
+        stroke: none !important;
+        filter: drop-shadow(0 0 8px rgba(243, 203, 105, 0.6));
+    }
+
+}

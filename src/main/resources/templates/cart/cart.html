@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shopping Cart - BookStore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/books.css}">
+    <style>
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2rem;
+            align-items: start;
+            margin-top: 1.5rem;
+        }
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .cart-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 1.2rem;
+            display: grid;
+            grid-template-columns: 80px 1fr auto auto;
+            gap: 1.25rem;
+            align-items: center;
+        }
+        .cart-thumb {
+            width: 80px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: var(--input);
+        }
+        .cart-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        .cart-info h3 a {
+            color: var(--text);
+            text-decoration: none;
+        }
+        .cart-info h3 a:hover {
+            color: var(--gold);
+        }
+        .cart-qty-form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .cart-qty-input {
+            width: 65px;
+            padding: 0.4rem;
+            background: var(--input);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--text);
+            text-align: center;
+            font-weight: 600;
+        }
+        .summary-box {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-top: 3px solid var(--gold);
+            border-radius: 14px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 90px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        .summary-total {
+            border-top: 1px solid var(--line);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .btn-remove {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.82rem;
+            padding: 0.3rem 0;
+            text-decoration: underline;
+        }
+        .btn-remove:hover {
+            color: #ffb8b8;
+        }
+        @media (max-width: 860px) {
+            .cart-grid {
+                grid-template-columns: 1fr;
+            }
+            .cart-card {
+                grid-template-columns: 70px 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="catalog-page">
+
+<!-- Navbar -->
+<header class="nav">
+    <div class="container nav-container">
+        <a th:href="@{/books}" class="brand">
+            <svg viewBox="0 0 24 24"><path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/><path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/></svg>
+            BookStore
+        </a>
+        <nav class="nav-links">
+            <a th:href="@{/books}" class="nav-item">&larr; Continue Shopping</a>
+            <div sec:authorize="hasRole('ADMIN')" class="admin-badge-wrapper">
+                <a th:href="@{/admin/books}" class="btn-admin-pill">Admin Inventory</a>
+            </div>
+            <div sec:authorize="isAuthenticated()" class="user-auth-group">
+                <a th:href="@{/customer/dashboard}" class="btn-ghost">My Account</a>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="btn-ghost-danger">Sign Out</button>
+                </form>
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="guest-auth-group">
+                <a th:href="@{/login}" class="btn-ghost">Sign in</a>
+                <a th:href="@{/register}" class="btn-primary">Create account</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="container py-content">
+
+    <div class="page-head">
+        <h1>Your Shopping Cart</h1>
+        <p class="page-sub" th:if="${cart != null and !cart.items.empty}"
+           th:text="${cart.totalQuantity} + ' item(s) in your cart'">Items</p>
+    </div>
+
+    <!-- Feedback messages -->
+    <div th:if="${param.success}" class="panel" style="border-color: var(--ok); background: rgba(127, 209, 160, 0.08); text-align: center; padding: 2.5rem 1.5rem;">
+        <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: var(--ok); fill: none; stroke-width: 2; margin-bottom: 0.8rem;"><path d="M20 6L9 17l-5-5"/></svg>
+        <h2 style="color: var(--ok);">Order Placed Successfully!</h2>
+        <p style="color: var(--muted); margin-bottom: 1.5rem;">Thank you for your purchase. Inventory stock has been reserved and updated.</p>
+        <a th:href="@{/books}" class="btn-primary">Return to Catalog</a>
+    </div>
+
+    <div th:if="${errorMessage}" class="panel" style="border-color: var(--danger); background: rgba(240, 163, 163, 0.1); color: var(--danger);" th:text="${errorMessage}"></div>
+
+    <!-- Active Cart Content -->
+    <div th:if="${cart != null and !cart.items.empty}" class="cart-grid">
+        <div class="cart-items">
+            <article class="cart-card" th:each="item : ${cart.items}">
+                <img th:if="${item.book.coverImageUrl != null and !item.book.coverImageUrl.empty}"
+                     th:src="${item.book.coverImageUrl}" alt="Cover" class="cart-thumb">
+                <div th:if="${item.book.coverImageUrl == null or item.book.coverImageUrl.empty}"
+                     class="cart-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--muted);">
+                    N/A
+                </div>
+
+                <div class="cart-info">
+                    <h3><a th:href="@{/books/{id}(id=${item.book.id})}" th:text="${item.book.title}">Title</a></h3>
+                    <div style="font-size: 0.88rem; color: var(--muted);" th:text="${item.book.author}">Author</div>
+                    <div style="font-size: 0.82rem; color: var(--gold); margin-top: 0.2rem;"
+                         th:text="'Rs. ' + ${#numbers.formatDecimal(item.book.price, 1, 2)} + ' each'">Price</div>                </div>
+
+                <!-- Update Quantity -->
+                <form th:action="@{/cart/update}" method="post" class="cart-qty-form">
+                    <input type="hidden" name="bookId" th:value="${item.book.id}">
+                    <input type="number" name="quantity" th:value="${item.quantity}" min="1"
+                           th:max="${item.book.stock}" class="cart-qty-input" onchange="this.form.submit()">
+                </form>
+
+                <!-- Subtotal & Remove -->
+                <div style="text-align: right;">
+                    <strong style="color: var(--gold); font-size: 1.15rem; display: block;"
+                            th:text="'Rs. ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">Rs. 0.00</strong>
+                    <form th:action="@{/cart/remove}" method="post" style="margin-top: 0.3rem;">
+                        <input type="hidden" name="bookId" th:value="${item.book.id}">
+                        <button type="submit" class="btn-remove">Remove</button>
+                    </form>
+                </div>
+            </article>
+        </div>
+
+        <!-- Order Summary Box -->
+        <aside class="summary-box">
+            <h2 style="font-size: 1.3rem; margin-bottom: 1.2rem;">Order Summary</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span th:text="'Rs. ' + ${#numbers.formatDecimal(cart.totalPrice, 1, 2)}">Rs. 0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span style="color: var(--ok);">FREE</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span style="color: var(--gold);" th:text="'Rs. ' + ${#numbers.formatDecimal(cart.totalPrice, 1, 2)}">Rs. 0.00</span>
+            </div>
+
+            <form th:action="@{/cart/checkout}" method="post" style="margin-top: 1.5rem;">
+                <button type="submit" class="btn-primary w-100" style="padding: 0.85rem;">
+                    Complete Checkout
+                </button>
+            </form>
+            <p style="text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 0.8rem;">
+                Stock is deducted immediately upon confirmation.
+            </p>
+        </aside>
+    </div>
+
+    <!-- Empty Cart Fallback -->
+    <div th:if="${(cart == null or cart.items.empty) and param.success == null}" class="empty">
+        <svg viewBox="0 0 24 24" class="empty-icon"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <h2>Your Cart is Empty</h2>
+        <p>Explore our catalog to find your next great read.</p>
+        <a th:href="@{/books}" class="btn-primary" style="margin-top: 1rem;">Browse Books</a>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container footer-container">
+        <div class="brand-mini">
+            <svg viewBox="0 0 24 24"><path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/><path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/></svg>
+            <span>BookStore</span>
+        </div>
+        <p class="copyright">&copy; 2026 BookStore Management System.</p>
+    </div>
+</footer>
+
+</body>
+</html>

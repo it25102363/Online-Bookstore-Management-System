@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <style>
-        /* Fix sidebar box-sizing and padding so the logout button stays fully inside the viewport */
         .sidebar {
             box-sizing: border-box !important;
             padding: 1.5rem 1rem 1.5rem 1rem !important;
@@ -22,7 +21,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Dashboard layout & table styling matching the cinematic theme */
         body {
             background-color: #000000;
             color: #ffffff;
@@ -70,6 +68,14 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(233, 185, 73, 0.4);
+            transform: translateY(-2px);
         }
 
         .stat-card .label {
@@ -83,6 +89,54 @@
             font-size: 2.25rem;
             font-weight: 400;
             color: #ffffff;
+        }
+
+        /* Quick Action Section */
+        .action-banner {
+            background: linear-gradient(180deg, rgba(233, 185, 73, 0.06), transparent), #121217;
+            border: 1px solid rgba(233, 185, 73, 0.25);
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-banner h3 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.6rem;
+            margin: 0 0 0.3rem 0;
+            color: #ffffff;
+        }
+
+        .action-banner p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.92rem;
+        }
+
+        .btn-gold {
+            background: linear-gradient(180deg, #f3cb69, #e9b949);
+            color: #1b1405;
+            padding: 0.7rem 1.4rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 15px rgba(233, 185, 73, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 185, 73, 0.35);
         }
 
         /* Hero User Table Section */
@@ -133,7 +187,6 @@
             background-color: rgba(255, 255, 255, 0.03);
         }
 
-        /* Action Buttons inside table */
         .btn-delete {
             background-color: rgba(185, 28, 28, 0.2);
             color: #f87171;
@@ -155,7 +208,7 @@
 </head>
 <body>
 
-<!-- Sidebar Component with Inventory, Services, and Feedback added -->
+<!-- Sidebar -->
 <aside class="sidebar">
     <div class="sidebar-top">
         <div class="logo-area">
@@ -164,7 +217,9 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="/admin/dashboard" class="active">Home</a></li>
-            <li><a href="/admin/inventory">Inventory</a></li>
+            <li><a href="/admin/books">Inventory &amp; Books</a></li>
+            <li><a href="/admin/orders">Order History</a></li>
+            <li><a href="/books">Customer Storefront</a></li>
             <li><a href="/admin/services">Services</a></li>
             <li><a href="/admin/feedback">Feedback</a></li>
         </ul>
@@ -176,29 +231,44 @@
     </div>
 </aside>
 
-<!-- Main Content Wrapper -->
+<!-- Main Content -->
 <main class="main-content">
     <div class="dashboard-container">
 
-        <!-- Header section with default name fallback -->
+        <!-- Welcome Header -->
         <div class="welcome-header">
-            <div class="date-label">Monday, September 28</div>
-            <h1>Good afternoon, <span th:text="${user != null ? user.name : 'System Admin'}">System Admin</span></h1>
+            <div class="date-label">Admin Control Panel</div>
+            <h1>Good day, <span th:text="${user != null ? user.name : 'System Admin'}">System Admin</span></h1>
         </div>
 
-        <!-- Stats Grid Cards with safe fallback default counts -->
+        <!-- Quick Action Banner for Inventory Management -->
+        <div class="action-banner">
+            <div>
+                <h3>Book &amp; Inventory Management</h3>
+                <p>Manage stock levels, upload book cover images, update pricing, and add new titles.</p>
+            </div>
+            <a href="/admin/books" class="btn-gold">
+                <span>Manage Books &amp; Covers &rarr;</span>
+            </a>
+        </div>
+
+        <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
                 <span class="label">Total Users</span>
-                <span class="value" th:text="${totalUsers != null ? totalUsers : 4}">4</span>
+                <span class="value" th:text="${totalUsers != null ? totalUsers : 4}">0</span>
             </div>
+            <!-- Clickable card directly navigating to inventory -->
+            <a href="/admin/books" class="stat-card">
+                <span class="label">Books in Library &rarr;</span>
+                <span class="value" th:text="${totalBooks != null ? totalBooks : 10}">0</span>
+            </a>
             <div class="stat-card">
-                <span class="label">Books in library</span>
-                <span class="value" th:text="${totalBooks != null ? totalBooks : 10}">10</span>
-            </div>
-            <div class="stat-card">
-                <span class="label">Total Orders</span>
-                <span class="value" th:text="${totalOrders != null ? totalOrders : 0}">0</span>
+                <!-- Clickable Orders Stat Card -->
+                <a href="/admin/orders" class="stat-card">
+                    <span class="label">Total Orders &rarr;</span>
+                    <span class="value" th:text="${totalOrders != null ? totalOrders : 0}">0</span>
+                </a>
             </div>
             <div class="stat-card">
                 <span class="label">System Role</span>
@@ -206,7 +276,7 @@
             </div>
         </div>
 
-        <!-- Hero Section Displaying the User Table Upfront -->
+        <!-- User Table Section -->
         <section class="hero-section">
             <h2>User Management (CRUD Overview)</h2>
             <div class="table-responsive">

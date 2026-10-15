@@ -41,9 +41,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Static resources and public authentication pages
                         .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+
+                        // 2. Public store catalog and product details browsing
+                        .requestMatchers("/books", "/books/**").permitAll()
+
+                        // 3. Role-protected routes
                         .requestMatchers("/admin/**", "/users/**").hasRole("ADMIN")
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
+
+                        // 4. Any other unexpected endpoint requires authentication
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -79,4 +87,6 @@ public class SecurityConfig {
             }
         };
     }
+
+
 }

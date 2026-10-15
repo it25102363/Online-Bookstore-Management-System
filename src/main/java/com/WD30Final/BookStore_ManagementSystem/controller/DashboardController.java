@@ -1,9 +1,10 @@
 package com.WD30Final.BookStore_ManagementSystem.controller;
 
-
 import com.WD30Final.BookStore_ManagementSystem.entity.Admin;
 import com.WD30Final.BookStore_ManagementSystem.entity.Customer;
 import com.WD30Final.BookStore_ManagementSystem.entity.User;
+import com.WD30Final.BookStore_ManagementSystem.repository.BookRepository;
+import com.WD30Final.BookStore_ManagementSystem.repository.OrderRepository;
 import com.WD30Final.BookStore_ManagementSystem.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,21 +15,31 @@ import org.springframework.web.bind.annotation.*;
 public class DashboardController {
 
     private final UserService userService;
+    private final BookRepository bookRepository;
+    private final OrderRepository orderRepository;
 
-    public DashboardController(UserService userService) {
+    public DashboardController(UserService userService,
+                               BookRepository bookRepository,
+                               OrderRepository orderRepository) {
         this.userService = userService;
+        this.bookRepository = bookRepository;
+        this.orderRepository = orderRepository;
     }
 
-    // Unified Admin Dashboard (Displays stats and user list table)
+    // Unified Admin Dashboard (Displays real-time live stats and user list table)
     @GetMapping("/admin/dashboard")
     public String adminDashboard(Authentication authentication, Model model) {
-        User adminUser = userService.findByEmail(authentication.getName());
+        User adminUser = (authentication != null) ? userService.findByEmail(authentication.getName()) : null;
+
+        long userCount = userService.getAllUsers().size();
+        long bookCount = bookRepository.count();
+        long orderCount = orderRepository.count();
 
         model.addAttribute("user", adminUser);
-        model.addAttribute("totalUsers", userService.getAllUsers().size());
-        model.addAttribute("totalBooks", 10);
-        model.addAttribute("totalOrders", 0);
-        model.addAttribute("users", userService.getAllUsers()); // Populates the admin user table
+        model.addAttribute("totalUsers", userCount);
+        model.addAttribute("totalBooks", bookCount);
+        model.addAttribute("totalOrders", orderCount);
+        model.addAttribute("users", userService.getAllUsers());
 
         return "admin-dashboard";
     }
@@ -36,7 +47,7 @@ public class DashboardController {
     // Customer Dashboard
     @GetMapping("/customer/dashboard")
     public String customerDashboard(Authentication authentication, Model model) {
-        User user = userService.findByEmail(authentication.getName());
+        User user = (authentication != null) ? userService.findByEmail(authentication.getName()) : null;
         model.addAttribute("user", user);
 
         // Loyalty points check for Customer entity
@@ -44,7 +55,7 @@ public class DashboardController {
             model.addAttribute("loyaltyPoints", customer.getLoyaltyPoints());
         }
 
-        model.addAttribute("totalBooks", 10);
+        model.addAttribute("totalBooks", bookRepository.count());
         model.addAttribute("wishlistCount", 0);
         model.addAttribute("cartCount", 0);
 

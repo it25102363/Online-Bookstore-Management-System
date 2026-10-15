@@ -1,12 +1,23 @@
 spring:
   application:
     name: BookStore_ManagementSystem
+
   datasource:
     url: jdbc:mysql://localhost:3306/BookStoreSystem?createDatabaseIfNotExist=true
     username: root
-    password: "@Raneesha2006"
+    password:
 
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true

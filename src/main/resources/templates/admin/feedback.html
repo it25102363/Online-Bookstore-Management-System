@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer Feedback &amp; Reviews - Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/books.css}">
+    <style>
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--surface);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+        .data-table th, .data-table td {
+            padding: 1.1rem 1.25rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+        .data-table th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+        }
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .stars-gold {
+            color: var(--gold);
+            letter-spacing: 2px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .btn-delete {
+            background: rgba(240, 163, 163, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(240, 163, 163, 0.25);
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-delete:hover {
+            background: rgba(240, 163, 163, 0.22);
+        }
+        .alert {
+            padding: 0.85rem 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        .alert-success {
+            background: rgba(127, 209, 160, 0.15);
+            color: var(--ok);
+            border: 1px solid rgba(127, 209, 160, 0.3);
+        }
+        .alert-danger {
+            background: rgba(240, 163, 163, 0.15);
+            color: var(--out);
+            border: 1px solid rgba(240, 163, 163, 0.3);
+        }
+    </style>
+</head>
+<body class="catalog-page">
+
+<header class="nav">
+    <div class="container nav-container">
+        <a th:href="@{/books}" class="brand">
+            <svg viewBox="0 0 24 24"><path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/><path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/></svg>
+            BookStore
+        </a>
+        <nav class="nav-links">
+            <a th:href="@{/admin/dashboard}" class="nav-item">&larr; Admin Dashboard</a>
+            <a th:href="@{/admin/books}" class="nav-item">Book Management</a>
+            <a th:href="@{/admin/orders}" class="nav-item">Order History</a>
+            <span class="btn-admin-pill">Feedback Mode</span>
+        </nav>
+    </div>
+</header>
+
+<main class="container py-content">
+    <div class="page-head">
+        <h1>Customer Feedback &amp; Reviews</h1>
+        <p class="page-sub">Moderate customer star ratings, reviews, and catalog comments.</p>
+    </div>
+
+    <!-- Alert Notifications -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th style="width: 220px;">Book Title</th>
+                <th style="width: 150px;">Rating</th>
+                <th>Customer Review</th>
+                <th style="width: 180px;">Reviewer</th>
+                <th style="width: 100px;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rev : ${reviews}">
+                <td>
+                    <strong style="color: var(--text);" th:text="${rev.book != null ? rev.book.title : 'General Store Review'}">Clean Architecture</strong>
+                    <div th:if="${rev.book != null}" style="font-size: 0.8rem; color: var(--muted);" th:text="${rev.book.author}">Robert C. Martin</div>
+                </td>
+                <td>
+                    <div class="stars-gold">
+                        <span th:text="${'★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating)}">★★★★★</span>
+                        <span style="font-size: 0.82rem; color: var(--muted); margin-left: 0.25rem;" th:text="'(' + ${rev.rating} + '/5)'">(5/5)</span>
+                    </div>
+                </td>
+                <td>
+                    <p style="margin: 0; color: #cbd5e1; line-height: 1.5;" th:text="${rev.comment}">Great book, very detailed explanation.</p>
+                </td>
+                <td>
+                    <div style="font-weight: 500; color: var(--text);" th:text="${rev.reviewerName != null ? rev.reviewerName : 'Anonymous'}">Customer</div>
+                </td>
+                <td>
+                    <form th:action="@{/admin/feedback/delete/{id}(id=${rev.id})}" method="post" onsubmit="return confirm('Delete this customer feedback?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${reviews == null or reviews.empty}">
+                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--muted);">
+                    No customer feedback has been submitted yet.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

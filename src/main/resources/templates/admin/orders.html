@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Orders - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/books.css}">
+    <style>
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--surface);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+        .data-table th, .data-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+        .data-table th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+        }
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: rgba(127, 209, 160, 0.15);
+            color: var(--ok);
+            border: 1px solid rgba(127, 209, 160, 0.3);
+        }
+    </style>
+</head>
+<body class="catalog-page">
+
+<header class="nav">
+    <div class="container nav-container">
+        <a th:href="@{/books}" class="brand">
+            <svg viewBox="0 0 24 24"><path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/><path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/></svg>
+            BookStore
+        </a>
+        <nav class="nav-links">
+            <a th:href="@{/admin/dashboard}" class="nav-item">&larr; Admin Dashboard</a>
+            <a th:href="@{/admin/books}" class="nav-item">Book Management</a>
+            <span class="btn-admin-pill">Orders Mode</span>
+        </nav>
+    </div>
+</header>
+
+<main class="container py-content">
+    <div class="page-head">
+        <h1>Order History &amp; Transactions</h1>
+        <p class="page-sub">Permanent sales records, purchased items, and total revenue in Sri Lankan Rupees.</p>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Date &amp; Time</th>
+                <th>Customer</th>
+                <th>Items Purchased</th>
+                <th>Total (Rs.)</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td style="font-family: monospace; font-weight: 600; color: var(--gold);" th:text="${order.orderNumber}">ORD-1234</td>
+                <td style="font-size: 0.85rem; color: var(--muted);" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">2026-10-15 19:30</td>
+                <td>
+                    <div style="font-weight: 500;" th:text="${order.customerName}">Customer</div>
+                    <div style="font-size: 0.8rem; color: var(--muted);" th:text="${order.customerEmail}">customer@email.com</div>
+                </td>
+                <td>
+                    <div th:each="item : ${order.items}" style="font-size: 0.88rem; margin-bottom: 0.2rem;">
+                        <span th:text="${item.bookTitle}">Book</span>
+                        <span style="color: var(--muted);" th:text="' &times; ' + ${item.quantity}"> &times; 1</span>
+                    </div>
+                </td>
+                <td style="font-weight: 700; color: var(--gold);" th:text="'Rs. ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">Rs. 0.00</td>
+                <td>
+                    <span class="status-badge" th:text="${order.status}">COMPLETED</span>
+                </td>
+            </tr>
+            <tr th:if="${orders == null or orders.empty}">
+                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--muted);">
+                    No orders have been placed yet.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
