@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Order Details - Bookstore</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/order-management.css}">
+</head>
+
+<body>
+
+<!-- ====================================== -->
+<!-- SIDEBAR -->
+<!-- ====================================== -->
+
+<aside class="om-sidebar">
+
+    <div class="om-logo">Bookstore</div>
+
+    <!-- Admin Navigation -->
+    <nav class="om-menu" th:if="${isAdmin}">
+
+        <a th:href="@{/admin/dashboard}">
+            Dashboard
+        </a>
+
+        <a th:href="@{/admin/orders}" class="active">
+            Manage Orders
+        </a>
+
+        <a th:href="@{/users}">
+            Manage Users
+        </a>
+
+    </nav>
+
+    <!-- Customer Navigation -->
+    <nav class="om-menu" th:unless="${isAdmin}">
+
+        <a th:href="@{/customer/dashboard}">
+            Home
+        </a>
+
+        <a th:href="@{/books}">
+            Books
+        </a>
+
+        <a th:href="@{/cart}">
+            Cart
+        </a>
+
+        <a th:href="@{/orders}" class="active">
+            Orders
+        </a>
+
+        <a th:href="@{/profile}">
+            Profile
+        </a>
+
+    </nav>
+
+    <!-- Logout -->
+    <form class="om-logout"
+          th:action="@{/logout}"
+          method="post">
+
+        <button type="submit"
+                class="om-btn om-btn-danger">
+            Logout
+        </button>
+
+    </form>
+
+</aside>
+
+<!-- ====================================== -->
+<!-- MAIN CONTENT -->
+<!-- ====================================== -->
+
+<main class="om-main">
+
+    <div class="om-container">
+
+        <!-- Page Header -->
+        <header class="om-heading">
+
+            <p class="om-eyebrow">
+                Bookstore Orders
+            </p>
+
+            <h1>
+                Order #
+                <span th:text="${order.id}">1</span>
+            </h1>
+
+            <p class="om-muted">
+                View your order information and purchased books.
+            </p>
+
+        </header>
+
+        <!-- ====================================== -->
+        <!-- ORDER SUMMARY -->
+        <!-- ====================================== -->
+
+        <section class="om-card">
+
+            <h2>Order Summary</h2>
+
+            <div class="om-detail-grid">
+
+                <!-- Order ID -->
+                <div>
+                    <p class="om-muted">Order ID</p>
+
+                    <p class="om-detail-value"
+                       th:text="${order.id}">
+                        1
+                    </p>
+                </div>
+
+                <!-- Order Date -->
+                <div>
+                    <p class="om-muted">Order Date</p>
+
+                    <p class="om-detail-value"
+                       th:text="${order.createdAt != null ?
+                           #temporals.format(
+                               order.createdAt,
+                               'dd MMM yyyy, HH:mm'
+                           ) : '-'}">
+                        Date
+                    </p>
+                </div>
+
+                <!-- Order Status -->
+                <div>
+                    <p class="om-muted">Order Status</p>
+
+                    <span class="om-status"
+                          th:classappend="${'om-status--' +
+                          #strings.toLowerCase(order.status.name())}"
+                          th:text="${order.status}">
+                        PENDING
+                    </span>
+                </div>
+
+                <!-- Total Amount -->
+                <div>
+                    <p class="om-muted">Total Amount</p>
+
+                    <p class="om-detail-value">
+                        Rs.
+                        <span th:text="${order.totalAmount}">
+                            0.00
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Customer Name: Admin Only -->
+                <div th:if="${isAdmin}">
+
+                    <p class="om-muted">
+                        Customer Name
+                    </p>
+
+                    <p class="om-detail-value"
+                       th:text="${order.customer.name}">
+                        Customer
+                    </p>
+
+                </div>
+
+                <!-- Customer Email: Admin Only -->
+                <div th:if="${isAdmin}">
+
+                    <p class="om-muted">
+                        Customer Email
+                    </p>
+
+                    <p class="om-detail-value"
+                       th:text="${order.customer.email}">
+                        email@example.com
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- ORDERED BOOKS -->
+        <!-- ====================================== -->
+
+        <section class="om-card">
+
+            <h2>Ordered Books</h2>
+
+            <div class="om-table-wrap">
+
+                <table class="om-table">
+
+                    <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="item : ${order.items}">
+
+                        <!-- Book Title -->
+                        <td th:text="${item.bookTitle != null
+                            and !#strings.isEmpty(item.bookTitle)
+                            ? item.bookTitle
+                            : 'Book #' + item.bookId}">
+                            Book Title
+                        </td>
+
+                        <!-- Quantity -->
+                        <td th:text="${item.quantity}">
+                            1
+                        </td>
+
+                        <!-- Unit Price -->
+                        <td>
+                            Rs.
+                            <span th:text="${item.unitPrice}">
+                                0.00
+                            </span>
+                        </td>
+
+                        <!-- Subtotal -->
+                        <td>
+                            Rs.
+                            <span th:text="${item.subtotal}">
+                                0.00
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- Grand Total -->
+            <p class="om-total">
+
+                Grand Total: Rs.
+
+                <span th:text="${order.totalAmount}">
+                    0.00
+                </span>
+
+            </p>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- CUSTOMER: CANCEL ORDER -->
+        <!-- ALWAYS VISIBLE TO CUSTOMER -->
+        <!-- ====================================== -->
+
+        <section class="om-card" th:unless="${isAdmin}">
+
+            <h2>Cancel Order</h2>
+
+            <!-- Cancellation Allowed -->
+            <div th:if="${order.canCancel()}">
+
+                <p class="om-muted">
+                    This order is eligible for cancellation.
+                </p>
+
+                <form th:action="@{/orders/{id}/cancel(id=${order.id})}"
+                      method="post">
+
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}">
+
+                    <button type="submit"
+                            class="om-btn om-btn-danger"
+                            onclick="return confirm('Are you sure you want to cancel this order?');">
+
+                        Cancel Order
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Cancellation Not Allowed -->
+            <div th:unless="${order.canCancel()}">
+
+                <p class="om-muted">
+                    This order cannot be cancelled.
+                    Current status:
+                    <strong th:text="${order.status}">
+                        DELIVERED
+                    </strong>
+                </p>
+
+                <button type="button"
+                        class="om-btn om-btn-danger"
+                        disabled
+                        style="opacity: 0.5; cursor: not-allowed;">
+
+                    Cancel Order
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- ADMIN: UPDATE ORDER STATUS -->
+        <!-- ALWAYS VISIBLE TO ADMIN -->
+        <!-- ====================================== -->
+
+        <section class="om-card" th:if="${isAdmin}">
+
+            <h2>Update Order Status</h2>
+
+            <!-- Status Can Be Updated -->
+            <div th:if="${order.status.name() == 'PENDING'
+                      or order.status.name() == 'CONFIRMED'
+                      or order.status.name() == 'SHIPPED'}">
+
+                <p class="om-muted">
+                    Change the current order status.
+                </p>
+
+                <form class="om-inline-form"
+                      th:action="@{/admin/orders/{id}/status(id=${order.id})}"
+                      method="post">
+
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}">
+
+                    <select name="status"
+                            class="om-input"
+                            required>
+
+                        <option value="" disabled selected>
+                            Select New Status
+                        </option>
+
+                        <!-- Pending to Confirmed -->
+                        <option value="CONFIRMED"
+                                th:if="${order.status.name() == 'PENDING'}">
+                            Confirmed
+                        </option>
+
+                        <!-- Confirmed to Shipped -->
+                        <option value="SHIPPED"
+                                th:if="${order.status.name() == 'CONFIRMED'}">
+                            Shipped
+                        </option>
+
+                        <!-- Shipped to Delivered -->
+                        <option value="DELIVERED"
+                                th:if="${order.status.name() == 'SHIPPED'}">
+                            Delivered
+                        </option>
+
+                        <!-- Pending/Confirmed to Cancelled -->
+                        <option value="CANCELLED"
+                                th:if="${order.status.name() == 'PENDING'
+                                    or order.status.name() == 'CONFIRMED'}">
+                            Cancelled
+                        </option>
+
+                    </select>
+
+                    <button type="submit"
+                            class="om-btn">
+
+                        Update Status
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Status Cannot Be Updated -->
+            <div th:if="${order.status.name() == 'DELIVERED'
+                      or order.status.name() == 'CANCELLED'}">
+
+                <p class="om-muted">
+                    This order has reached a final status.
+                    No further status changes are allowed.
+                </p>
+
+                <select class="om-input" disabled>
+                    <option>
+                        No Status Changes Available
+                    </option>
+                </select>
+
+                <button type="button"
+                        class="om-btn"
+                        disabled
+                        style="opacity: 0.5; cursor: not-allowed;">
+
+                    Update Status
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- ADMIN: DELETE ORDER -->
+        <!-- ALWAYS VISIBLE TO ADMIN -->
+        <!-- ====================================== -->
+
+        <section class="om-card" th:if="${isAdmin}">
+
+            <h2>Delete Order</h2>
+
+            <!-- Delete Allowed -->
+            <div th:if="${order.canDelete()}">
+
+                <p class="om-muted">
+                    This order has been cancelled.
+                    You can permanently delete it.
+                </p>
+
+                <form th:action="@{/admin/orders/{id}/delete(id=${order.id})}"
+                      method="post">
+
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}">
+
+                    <button type="submit"
+                            class="om-btn om-btn-danger"
+                            onclick="return confirm('Permanently delete this order?');">
+
+                        Delete Order
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Delete Not Allowed -->
+            <div th:unless="${order.canDelete()}">
+
+                <p class="om-muted">
+                    Only CANCELLED orders can be deleted.
+                    Current status:
+                    <strong th:text="${order.status}">
+                        PENDING
+                    </strong>
+                </p>
+
+                <button type="button"
+                        class="om-btn om-btn-danger"
+                        disabled
+                        style="opacity: 0.5; cursor: not-allowed;">
+
+                    Delete Order
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- BACK NAVIGATION -->
+        <!-- ====================================== -->
+
+        <!-- Admin Back -->
+        <a th:if="${isAdmin}"
+           class="om-btn om-btn-secondary"
+           th:href="@{/admin/orders}">
+
+            Back to All Orders
+
+        </a>
+
+        <!-- Customer Back -->
+        <a th:unless="${isAdmin}"
+           class="om-btn om-btn-secondary"
+           th:href="@{/orders}">
+
+            Back to My Orders
+
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>
