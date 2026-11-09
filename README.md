@@ -30,11 +30,10 @@ This project aims to provide an online platform where customers can browse books
 - Manage book inventory
 - Add, update and remove books
 
-**3. Cart and Wishlist Management**
-- Add and remove books
+**3. Cart Management**
+- Add and remove books from the cart
 - Update shopping cart quantities
 - Calculate cart totals
-- Manage wishlist items
 
 **4. Order Management**
 - View customer orders
@@ -43,10 +42,10 @@ This project aims to provide an online platform where customers can browse books
 - Cancel eligible orders
 - Delete cancelled orders
 
-**5. Payment Management**
-- Manage payment methods
-- Record payment information
-- Track payment statuses
+**5. Wishlist Management**
+- Add books to the wishlist
+- View saved books
+- Remove books from the wishlist
 
 **6. Reviews and Feedback**
 - Manage customer reviews
@@ -73,8 +72,11 @@ The project uses separate development branches to manage individual contribution
 |---|---|
 | `main` | Main project documentation and integration base |
 | `feature/user-authentication` | User authentication and management |
-| `order-management` | Order management module |
+| `order-management` | Order processing and management |
+| `book-management` | Book inventory management |
+| `wishlist-management` | Customer wishlist management |
 | `feature/reviews` | Reviews and feedback development |
+| `cart-management` | Shopping cart management |
 
 Additional feature branches may be created as development progresses.
 
@@ -85,17 +87,6 @@ Additional feature branches may be created as development progresses.
 Each module is developed and tested separately before integration into the main branch.
 
 The final system will be completed by integrating the individual modules and performing system-level testing.
-
-## Getting Started
-
-1. Clone the GitHub repository.
-2. Check out the relevant development branch containing the application source code.
-3. Open the project in IntelliJ IDEA.
-4. Configure the local MySQL database connection securely.
-5. Install the required Maven dependencies.
-6. Run the Spring Boot application.
-
-**Note:** The current `main` branch contains project documentation only. Application source code is maintained in the respective feature branches until integration.
 
 ## Team Contributions
 
