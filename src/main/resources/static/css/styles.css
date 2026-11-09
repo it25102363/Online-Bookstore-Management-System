@@ -1,0 +1,320 @@
+/* ==========================================
+   BOOKSTORE THEME: "Midnight Library"
+   Deep ink-navy surfaces, warm paper-cream text, brass (gold) accents,
+   with Venice Blue #16587B and Rock Blue #84B3CE as the brand blues.
+   Old variable names (--tan, --accent, --card-bg ...) are kept as aliases,
+   so every existing page keeps working.
+   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+    /* Brand blues */
+    --venice: #16587B;
+    --rock: #84B3CE;
+
+    /* Ink-navy ramp (darkest to lightest) */
+    --shade-900: #050f1a;   /* inputs, text on gold buttons */
+    --shade-850: #081727;   /* sidebar */
+    --shade-800: #0e2842;   /* cards */
+    --shade-700: #1e4467;   /* borders */
+    --shade-600: #0a2036;   /* page background */
+    --shade-500: #14507a;   /* gradient end (Venice-leaning) */
+
+    /* Paper and brass */
+    --cream: #f3ecdc;
+    --mist: #9db6cb;        /* secondary text */
+    --mist-dim: #6f8aa3;
+    --gold: #dcae55;
+    --gold-light: #ecc983;
+    --gold-dim: #b58c3c;
+
+    /* Legacy aliases used by older pages */
+    --tan: var(--cream);
+    --tan-light: #fff7e6;
+    --tan-dim: var(--mist);
+
+    --bg-primary: var(--shade-600);
+    --card-bg: var(--shade-800);
+    --text-primary: var(--cream);
+    --text-secondary: var(--mist);
+    --accent: var(--gold);
+    --accent-hover: var(--gold-light);
+    --accent-ink: var(--shade-900);
+    --border: var(--shade-700);
+    --border-focus: var(--gold);
+    --line: rgba(157, 182, 203, 0.16);
+
+    --error-bg: rgba(224, 112, 98, 0.16);
+    --error-text: #f0a898;
+    --success-bg: rgba(88, 186, 140, 0.16);
+    --success-text: #8fdcb6;
+
+    --radius: 16px;
+    --font-body: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --card-height: 600px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-body); }
+h1, h2, h3 { font-family: var(--font-display); }
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Sign In / Sign Up: navy sweeping into Venice Blue */
+body:has(> .card) {
+    overflow: hidden;
+    background:
+        radial-gradient(70% 60% at 85% 10%, rgba(220, 174, 85, 0.10), transparent 60%),
+        linear-gradient(135deg, var(--shade-600) 0%, var(--shade-500) 100%) fixed;
+}
+@media (max-height: 700px) {
+    body:has(> .card) { overflow-y: auto; align-items: flex-start; }
+}
+
+/* Management pages: tall tables must scroll from the top */
+body:has(> .catalog-page) { align-items: flex-start; }
+/* Pages with the fixed sidebar (customer + admin dashboards) */
+body:has(> .sidebar) { display: block; align-items: initial; }
+
+.ambient-glow { display: none; }
+
+/* ==========================================
+   Sign In / Sign Up card
+   ========================================== */
+.card {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 76px 420px 480px;
+    grid-template-rows: 100%;
+    height: var(--card-height);
+    background-color: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255,255,255,.02) inset;
+    overflow: hidden;
+    max-width: 980px; width: 100%; margin: 1.5rem;
+}
+
+.card-nav {
+    position: relative; list-style: none;
+    background-color: var(--shade-850);
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 1.5rem 0; gap: 1.5rem;
+}
+.logo-placeholder {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dim));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 6px 16px rgba(220, 174, 85, 0.28);
+}
+.logo-placeholder svg { width: 24px; height: 24px; fill: var(--shade-900); }
+.card-nav li { position: relative; width: 100%; display: flex; justify-content: center; }
+.card-nav li:first-child { position: static; }
+.card-nav a {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); transition: all 0.2s ease; text-decoration: none;
+}
+.card-nav a svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; }
+.card-nav a:hover, .card-nav a.active { background-color: rgba(220, 174, 85, 0.12); color: var(--gold); }
+.card-nav span { display: none; }
+
+.active-bar {
+    position: absolute; left: 0; top: 122px; transform: translateY(-50%);
+    width: 4px; height: 24px; background-color: var(--gold);
+    border-radius: 0 4px 4px 0; box-shadow: 0 0 12px rgba(220, 174, 85, 0.55);
+    transition: top 0.45s cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+.card-nav:has(a.signup.active) .active-bar { top: 190px; }
+
+/* Hero / visual panel */
+.card-hero {
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;
+}
+.hero-bg-img {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover; filter: saturate(0.85) contrast(1.05); z-index: 0;
+}
+.hero-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background:
+        linear-gradient(to top, rgba(5, 15, 26, 0.96) 15%, rgba(5, 15, 26, 0.4) 70%),
+        linear-gradient(135deg, rgba(22, 88, 123, 0.45), transparent 60%);
+    z-index: 1;
+}
+.hero-glass-box {
+    position: relative; z-index: 2; min-height: 9.5rem;
+    background: rgba(5, 15, 26, 0.6);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    padding: 1.5rem; border-radius: 14px;
+}
+.badge-tag {
+    display: inline-block;
+    background-color: rgba(220, 174, 85, 0.14); color: var(--gold);
+    border: 1px solid rgba(220, 174, 85, 0.4);
+    font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.75rem;
+    border-radius: 20px; margin-bottom: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.hero-glass-box h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; line-height: 1.15; color: var(--text-primary); margin-bottom: 0.4rem; }
+.hero-glass-box h3 { font-size: 0.88rem; font-weight: 400; color: var(--mist); line-height: 1.5; }
+
+/* Form panel */
+.card-form { padding: 2.5rem; display: flex; flex-direction: column; justify-content: center; }
+.form-header-area { margin-bottom: 1.5rem; }
+.form-header-area h2 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem; }
+.form-top { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
+.form-top a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+.form-top a:hover { color: var(--gold-light); }
+
+.alert { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.85rem; margin-bottom: 1.25rem; }
+.alert.error   { background-color: var(--error-bg);   color: var(--error-text);   border: 1px solid rgba(224, 112, 98, 0.35); }
+.alert.success { background-color: var(--success-bg); color: var(--success-text); border: 1px solid rgba(88, 186, 140, 0.35); }
+
+/* ==========================================
+   Forms (sign in/up + add/edit book)
+   ========================================== */
+.form-group { margin-bottom: 1.25rem; }
+.label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.form-group label, .form-card label {
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--mist); display: block; margin-bottom: 0.4rem;
+}
+.forgot-link { font-size: 0.8rem; color: var(--gold); text-decoration: none; }
+.forgot-link:hover { color: var(--gold-light); text-decoration: underline; }
+
+.card-form input,
+.form-card input, .form-card select, .form-card textarea {
+    width: 100%;
+    background-color: var(--shade-900);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.card-form input::placeholder, .form-card input::placeholder, .form-card textarea::placeholder { color: var(--mist-dim); }
+.card-form input:focus, .form-card input:focus, .form-card select:focus, .form-card textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(220, 174, 85, 0.2);
+}
+
+.submit-btn {
+    width: 100%; background-color: var(--gold); color: var(--accent-ink);
+    border: none; padding: 0.85rem 1rem; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s;
+    margin-top: 0.5rem;
+    box-shadow: 0 8px 20px -8px rgba(220, 174, 85, 0.55);
+}
+.submit-btn:hover { background-color: var(--gold-light); }
+.submit-btn:active { transform: scale(0.98); }
+.submit-btn svg { width: 18px; height: 18px; flex-shrink: 0; stroke: currentColor; }
+.form-note { font-size: 0.75rem; color: var(--text-secondary); text-align: center; margin-top: 1.25rem; line-height: 1.4; }
+
+@media (max-width: 860px) {
+    .card { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; max-width: 460px; }
+    .card-nav { flex-direction: row; justify-content: center; padding: 1rem; border-right: none; border-bottom: 1px solid var(--line); }
+    .card-form { min-height: 560px; }
+    .card-hero { display: none; }
+    .active-bar { display: none; }
+}
+
+/* ==========================================
+   Buttons
+   ========================================== */
+.btn {
+    display: inline-block; padding: 0.5rem 1rem; border-radius: 0.5rem;
+    font-weight: 500; text-align: center; border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.btn-danger {
+    background-color: rgba(224, 112, 98, 0.14); color: var(--error-text);
+    border: 1px solid rgba(224, 112, 98, 0.4);
+}
+.btn-danger:hover { background-color: rgba(224, 112, 98, 0.3); color: #ffd2c8; }
+
+.btn-primary {
+    background-color: var(--gold); color: var(--accent-ink);
+    padding: 0.6rem 1.2rem; border-radius: 10px; font-weight: 700; text-decoration: none;
+    font-size: 0.9rem; transition: background-color 0.2s, transform 0.1s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    border: none; cursor: pointer;
+    box-shadow: 0 8px 20px -10px rgba(220, 174, 85, 0.6);
+}
+.btn-primary:hover { background-color: var(--gold-light); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+    background-color: transparent; color: var(--mist); border: 1px solid var(--border);
+    padding: 0.6rem 1.2rem; border-radius: 10px; font-weight: 500; text-decoration: none;
+    font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.btn-secondary:hover { color: var(--text-primary); border-color: var(--rock); background: rgba(132, 179, 206, 0.08); }
+
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; cursor: pointer; }
+.btn-edit   { background-color: rgba(132, 179, 206, 0.14); color: var(--rock); border: 1px solid rgba(132, 179, 206, 0.35); }
+.btn-edit:hover { background-color: rgba(132, 179, 206, 0.26); color: #cfe3f1; }
+.btn-remove { background-color: var(--error-bg); color: var(--error-text); border: 1px solid rgba(224, 112, 98, 0.35); }
+.btn-remove:hover { background-color: rgba(224, 112, 98, 0.32); }
+
+/* ==========================================
+   Book management / catalog
+   ========================================== */
+.catalog-page {
+    max-width: 1100px; width: 100%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    border-radius: var(--radius);
+    box-shadow: 0 30px 70px -24px rgba(0, 0, 0, 0.75);
+    padding: 2.5rem; margin: 2rem; position: relative; z-index: 1;
+}
+.catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap; }
+.catalog-header h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--text-primary); }
+.actions-bar { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.table-container { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+.catalog-table { width: 100%; border-collapse: collapse; text-align: left; }
+.catalog-table th, .catalog-table td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
+.catalog-table tr:last-child td { border-bottom: none; }
+.catalog-table th {
+    font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--mist-dim); background-color: var(--shade-850);
+}
+.catalog-table td { color: var(--text-secondary); }
+.catalog-table tbody tr { transition: background-color 0.15s; }
+.catalog-table tbody tr:hover td { background-color: rgba(132, 179, 206, 0.06); }
+.catalog-table td.book-title { color: var(--text-primary); font-weight: 600; font-family: var(--font-display); font-size: 1rem; }
+.table-actions { display: flex; gap: 0.5rem; }
+
+/* Add / edit book */
+.form-card {
+    max-width: 500px; width: 100%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--line); border-top: 3px solid var(--gold);
+    border-radius: var(--radius);
+    box-shadow: 0 30px 70px -24px rgba(0, 0, 0, 0.75);
+    padding: 2.5rem; margin: 2rem; position: relative; z-index: 1;
+}
+.form-card h2 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; }
+.form-card p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
