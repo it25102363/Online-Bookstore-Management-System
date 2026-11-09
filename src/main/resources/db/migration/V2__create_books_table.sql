@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS books (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(180) NOT NULL,
+    author VARCHAR(140) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    category VARCHAR(80) NULL,
+    rating DECIMAL(2, 1) NULL,
+    cover_url VARCHAR(500) NULL
+);

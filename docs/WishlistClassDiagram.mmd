@@ -1,0 +1,45 @@
+classDiagram
+    direction LR
+    class User { <<abstract>> }
+    class Customer
+    class Admin
+    User <|-- Customer
+    User <|-- Admin
+    class Book {
+        -Long id
+        -String title
+        -String author
+        -BigDecimal price
+        -String category
+        -BigDecimal rating
+    }
+    class WishlistItem {
+        <<abstract>>
+        -Long id
+        -User user
+        -Book book
+        -String note
+        -LocalDateTime addedAt
+        +getTypeCode() String*
+        +getTypeLabel() String*
+        +getPriorityLevel() int*
+        +getHighlight() String*
+        +applyDetails(BigDecimal, String)*
+    }
+    class StandardWishlistItem
+    class PriorityWishlistItem { -BigDecimal targetPrice }
+    class GiftWishlistItem { -String recipientName }
+    WishlistItem <|-- StandardWishlistItem
+    WishlistItem <|-- PriorityWishlistItem
+    WishlistItem <|-- GiftWishlistItem
+    WishlistItem "*" --> "1" User
+    WishlistItem "*" --> "1" Book
+    class WishlistService { <<interface>> }
+    class WishlistServiceImpl
+    class WishlistItemFactory
+    class WishlistItemRepository { <<interface>> }
+    class WishlistController
+    WishlistService <|.. WishlistServiceImpl
+    WishlistServiceImpl --> WishlistItemRepository
+    WishlistServiceImpl ..> WishlistItemFactory
+    WishlistController --> WishlistService

@@ -1,195 +1,108 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Orders - Bookstore</title>
-
-    <link rel="stylesheet"
-          th:href="@{/css/order-management.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <style>
+        .orders-empty {
+            min-height: 420px;
+            display: grid;
+            place-items: center;
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+        .empty-inner { max-width: 470px; }
+        .empty-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 1.5rem;
+            display: grid;
+            place-items: center;
+            border-radius: 22px;
+            color: var(--gold-light);
+            background: rgba(220, 174, 85, 0.1);
+            border: 1px solid rgba(220, 174, 85, 0.3);
+        }
+        .empty-icon svg {
+            width: 34px;
+            height: 34px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .orders-empty h2 {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--cream);
+        }
+        .orders-empty p {
+            margin: 0.75rem auto 1.6rem;
+            color: var(--mist);
+            line-height: 1.65;
+        }
+    </style>
 </head>
-
 <body>
-
-<!-- Customer Sidebar -->
-<aside class="om-sidebar">
-
-    <div class="om-logo">Bookstore</div>
-
-    <nav class="om-menu">
-        <a th:href="@{/customer/dashboard}">Home</a>
-        <a th:href="@{/books}">Books</a>
-        <a th:href="@{/wishlist}">Wishlist</a>
-        <a th:href="@{/cart}">Cart</a>
-        <a th:href="@{/orders}" class="active">Orders</a>
-        <a th:href="@{/profile}">Profile</a>
-    </nav>
-
-    <form class="om-logout"
-          th:action="@{/logout}"
-          method="post">
-        <button type="submit"
-                class="om-btn om-btn-danger">
-            Logout
-        </button>
-    </form>
-
+<aside class="sidebar">
+    <div class="sidebar-top">
+        <div class="logo-area">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                <path d="M12 3v18c2.76-2.5 5-3.5 7-3.5V5c-2 0-4.24 1-7 3.5z" opacity="0.7"/>
+            </svg>
+            Bookstore
+        </div>
+        <nav aria-label="Customer navigation">
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/customer/dashboard}">Home</a></li>
+                <li><a th:href="@{/books}">Books</a></li>
+                <li><a th:href="@{/wishlist}">Wishlist</a></li>
+                <li><a th:href="@{/cart}">Cart</a></li>
+                <li><a class="active" th:href="@{/orders}" aria-current="page">Orders</a></li>
+                <li><a th:href="@{/profile}">Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-danger">Logout</button>
+        </form>
+    </div>
 </aside>
 
-<main class="om-main">
-    <div class="om-container">
-
-        <header class="om-heading">
-            <p class="om-eyebrow">Customer Portal</p>
-            <h1>My Orders</h1>
-            <p class="om-muted">
-                View your order history and track your purchases.
-            </p>
+<main class="main-content">
+    <div class="page">
+        <header class="page-head">
+            <div>
+                <div class="eyebrow">Your library</div>
+                <h1>My <span class="accent">orders</span></h1>
+                <p class="page-sub" th:text="'Order history for ' + ${user.name}">Your purchases and delivery updates.</p>
+            </div>
+            <div class="role" th:text="${orderCount} + ' orders'">0 orders</div>
         </header>
 
-        <!-- Success Message -->
-        <div class="om-alert om-success"
-             th:if="${successMessage}"
-             th:text="${successMessage}">
-        </div>
-
-        <!-- Error Message -->
-        <div class="om-alert om-error"
-             th:if="${errorMessage}"
-             th:text="${errorMessage}">
-        </div>
-
-        <!-- Total Orders -->
-        <div class="om-summary">
-            <div class="om-card">
-                <p class="om-muted">My Total Orders</p>
-
-                <p class="om-number"
-                   th:text="${#lists.size(orders)}">
-                    0
-                </p>
+        <section class="panel orders-empty" aria-labelledby="empty-title">
+            <div class="empty-inner">
+                <div class="empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2l1.5 4h9L18 2"/>
+                        <path d="M4 6h16l-1.2 14H5.2L4 6z"/>
+                        <path d="M9 10v5M15 10v5"/>
+                    </svg>
+                </div>
+                <h2 id="empty-title">No orders yet</h2>
+                <p>When you purchase a book, its receipt and delivery status will appear here.</p>
+                <a class="btn-primary" th:href="@{/books}">Browse books</a>
             </div>
-        </div>
-
-        <section class="om-card">
-
-            <h2>Order History</h2>
-
-            <!-- Empty Orders -->
-            <div class="om-empty"
-                 th:if="${#lists.isEmpty(orders)}">
-
-                <h2>No orders yet!</h2>
-
-                <p class="om-muted">
-                    You have not placed any orders.
-                </p>
-
-                <a class="om-btn"
-                   th:href="@{/books}">
-                    Browse Books
-                </a>
-            </div>
-
-            <!-- Orders Table -->
-            <div class="om-table-wrap"
-                 th:unless="${#lists.isEmpty(orders)}">
-
-                <table class="om-table">
-
-                    <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-
-                    <tr th:each="order : ${orders}">
-
-                        <td th:text="${order.id}">
-                            1
-                        </td>
-
-                        <td th:text="${order.createdAt != null ?
-                            #temporals.format(
-                                order.createdAt,
-                                'dd MMM yyyy, HH:mm'
-                            ) : '-'}">
-                            Date
-                        </td>
-
-                        <td>
-                            Rs.
-                            <span th:text="${order.totalAmount}">
-                                0.00
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="om-status"
-                                  th:classappend="${'om-status--' +
-                                  #strings.toLowerCase(order.status.name())}"
-                                  th:text="${order.status}">
-                                PENDING
-                            </span>
-                        </td>
-
-                        <td>
-                            <div class="om-actions">
-
-                                <!-- View Details -->
-                                <a class="om-btn om-btn-secondary"
-                                   th:href="@{/orders/{id}(id=${order.id})}">
-                                    View
-                                </a>
-
-                                <!-- Cancel Order -->
-                                <form th:if="${order.status.name() == 'PENDING'
-                                            or order.status.name() == 'CONFIRMED'}"
-                                      th:action="@{/orders/{id}/cancel(id=${order.id})}"
-                                      method="post">
-
-                                    <input type="hidden"
-                                           th:name="${_csrf.parameterName}"
-                                           th:value="${_csrf.token}">
-
-                                    <button type="submit"
-                                            class="om-btn om-btn-danger"
-                                            onclick="return confirm('Cancel this order?');">
-                                        Cancel
-                                    </button>
-
-                                </form>
-
-                            </div>
-                        </td>
-
-                    </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
         </section>
-
-        <a class="om-btn om-btn-secondary"
-           th:href="@{/customer/dashboard}">
-            Back to Dashboard
-        </a>
-
     </div>
 </main>
-
 </body>
 </html>
