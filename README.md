@@ -95,11 +95,11 @@ This project is developed as a university group assignment. Team members contrib
 This project demonstrates practical knowledge of Java Object-Oriented Programming, database connectivity, web application development, layered architecture, testing, and collaborative software development using GitHub.
 
 ## Project UI Screenshots
-<img width="1351" height="653" alt="image" src="https://github.com/user-attachments/assets/ee63bac7-dede-4ca9-9c5a-cb504d8ec410" />
-<img width="993" height="596" alt="image" src="https://github.com/user-attachments/assets/eb032f7a-4dee-4b36-a97d-7a17f1e76ecb" />
-<img width="1362" height="648" alt="image" src="https://github.com/user-attachments/assets/46eb1003-e4b7-47b9-b7e3-94db5487f6a8" />
-<img width="1361" height="645" alt="image" src="https://github.com/user-attachments/assets/44df24e9-dc2d-4151-805e-db743a69db5b" />
-<img width="1340" height="653" alt="image" src="https://github.com/user-attachments/assets/dd9399d9-76ec-4c9c-a942-9f7a1a6732ce" />
+<img width="1620" height="971" alt="image" src="https://github.com/user-attachments/assets/6018b8e7-2d65-4860-ad3b-20d818b5a737" />
+<img width="1822" height="863" alt="image" src="https://github.com/user-attachments/assets/c786268a-ed96-451f-93ef-66eef291e799" />
+<img width="1805" height="871" alt="image" src="https://github.com/user-attachments/assets/a58272ca-117f-41ec-9696-5f29f7603523" />
+<img width="1804" height="872" alt="image" src="https://github.com/user-attachments/assets/3590eb84-97c4-403f-b8b3-f74935f270a7" />
+
 
 
 
