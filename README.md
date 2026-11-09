@@ -51,8 +51,6 @@ This project aims to provide an online platform where customers can browse books
 - Manage customer reviews
 - Collect feedback about books and services
 
-*These modules describe the overall project scope. Development and integration are ongoing; not all features are complete.*
-
 ## Object-Oriented Programming Concepts
 
 The project is designed around the following OOP principles:
@@ -95,3 +93,15 @@ This project is developed as a university group assignment. Team members contrib
 ## Project Purpose
 
 This project demonstrates practical knowledge of Java Object-Oriented Programming, database connectivity, web application development, layered architecture, testing, and collaborative software development using GitHub.
+
+## Project UI Screenshots
+<img width="1351" height="653" alt="image" src="https://github.com/user-attachments/assets/ee63bac7-dede-4ca9-9c5a-cb504d8ec410" />
+<img width="993" height="596" alt="image" src="https://github.com/user-attachments/assets/eb032f7a-4dee-4b36-a97d-7a17f1e76ecb" />
+<img width="1362" height="648" alt="image" src="https://github.com/user-attachments/assets/46eb1003-e4b7-47b9-b7e3-94db5487f6a8" />
+<img width="1361" height="645" alt="image" src="https://github.com/user-attachments/assets/44df24e9-dc2d-4151-805e-db743a69db5b" />
+<img width="1340" height="653" alt="image" src="https://github.com/user-attachments/assets/dd9399d9-76ec-4c9c-a942-9f7a1a6732ce" />
+
+
+
+
+
