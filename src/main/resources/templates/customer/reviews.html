@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Reviews - Bookstore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/review.css}">
+</head>
+<body>
+
+<!-- Side Menu (same as customer dashboard, Reviews link added) -->
+<div class="sidebar">
+    <div class="sidebar-top">
+        <div class="logo-area">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/>
+                <path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/>
+            </svg>
+            Bookstore
+        </div>
+        <div>
+            <p class="sidebar-label">Browse</p>
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/customer/dashboard}">
+                    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a></li>
+                <li><a th:href="@{/books}">
+                    <svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg>Books</a></li>
+                <li><a th:href="@{/wishlist}">
+                    <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Wishlist</a></li>
+                <li><a th:href="@{/cart}">
+                    <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.2 11h10.3l1.7-8H6.2"/></svg>Cart</a></li>
+                <li><a th:href="@{/orders}">
+                    <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/></svg>Orders</a></li>
+                <li><a class="active" th:href="@{/reviews}">
+                    <svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.8-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1L3.2 9.4l6.1-.8L12 3z"/></svg>Reviews</a></li>
+                <li><a th:href="@{/profile}">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Profile</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">Logout</button>
+        </form>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="page">
+        <p class="eyebrow">Your voice</p>
+        <h1>My <span class="accent">Reviews</span></h1>
+        <p class="page-sub">Write, edit or delete your reviews of the books you have read.</p>
+
+        <div class="flash" th:if="${success}" th:text="${success}"></div>
+
+        <!-- CREATE / UPDATE form -->
+        <div class="panel">
+            <h2 th:text="${editing} ? 'Edit review' : 'Write a review'">Write a review</h2>
+
+            <form th:object="${reviewDto}"
+                  th:action="${editing} ? @{/reviews/{id}/update(id=${reviewDto.id})} : @{/reviews}"
+                  method="post">
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="bookTitle">Book title</label>
+                        <input id="bookTitle" type="text" th:field="*{bookTitle}" placeholder="e.g. Harry Potter and the Prisoner of Azkaban">
+                        <span class="err" th:if="${#fields.hasErrors('bookTitle')}" th:errors="*{bookTitle}"></span>
+                    </div>
+                    <div class="field">
+                        <label for="rating">Rating</label>
+                        <select id="rating" th:field="*{rating}">
+                            <option th:each="n : ${#numbers.sequence(5, 1, -1)}"
+                                    th:value="${n}"
+                                    th:text="${n} + ' / 5'">5 / 5</option>
+                        </select>
+                        <span class="err" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="comment">Your review</label>
+                    <textarea id="comment" th:field="*{comment}" placeholder="What did you think?"></textarea>
+                    <span class="err" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn-primary" th:text="${editing} ? 'Save changes' : 'Post review'">Post review</button>
+                    <a class="btn-ghost" th:if="${editing}" th:href="@{/reviews}">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- READ list -->
+        <div class="panel">
+            <h2>Your reviews</h2>
+
+            <p class="empty" th:if="${#lists.isEmpty(reviews)}">You have not written any reviews yet.</p>
+
+            <div class="table-responsive" th:unless="${#lists.isEmpty(reviews)}">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${reviews}">
+                        <td class="name" th:text="${r.bookTitle}">Book</td>
+                        <td>
+                            <span class="stars">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                      th:class="${i <= r.rating} ? '' : 'off'">&#9733;</span>
+                            </span>
+                        </td>
+                        <td th:text="${r.comment}">Comment</td>
+                        <td th:text="${r.createdAt}">Date</td>
+                        <td>
+                            <div class="row-actions">
+                                <a class="btn-edit" th:href="@{/reviews/{id}/edit(id=${r.id})}">Edit</a>
+                                <form th:action="@{/reviews/{id}/delete(id=${r.id})}" method="post"
+                                      onsubmit="return confirm('Delete this review?');">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
