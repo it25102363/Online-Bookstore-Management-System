@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Midnight Library | Books</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy:#050f1a;
+            --deep:#081727;
+            --blue:#0e2842;
+            --venice:#16587b;
+            --rock:#84b3ce;
+            --gold:#dcae55;
+            --lightgold:#ecc983;
+            --cream:#f3ecdc;
+            --muted:#9db6cb;
+        }
+        * { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            margin:0;
+            color:var(--cream);
+            font-family:'DM Sans',sans-serif;
+            background:var(--navy);
+        }
+
+        /* HOMEPAGE NAVIGATION */
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-link {
+            color: #f3ecdc;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ecc983;
+        }
+
+        .signup-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 25px;
+            border-radius: 30px;
+
+            background: linear-gradient(
+                    135deg,
+                    #ecc983,
+                    #dcae55,
+                    #b58c3c
+            );
+
+            color: #050f1a;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+
+            box-shadow: 0 8px 25px rgba(220,174,85,0.25);
+            transition: all 0.3s ease;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(220,174,85,0.4);
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .nav-actions {
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                font-size: 12px;
+            }
+
+            .signup-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
+        button,input,select { font:inherit; }
+        button { cursor:pointer; }
+        a { text-decoration:none; }
+        button:focus-visible,a:focus-visible,
+        input:focus-visible,select:focus-visible {
+            outline:2px solid var(--gold);
+            outline-offset:3px;
+        }
+
+        .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* NAVIGATION */
+        .topbar {
+            position:absolute;
+            top:0;left:0;
+            width:100%;
+            z-index:10;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:25px 6%;
+            gap:15px;
+        }
+        .logo {
+            font-family:'Fraunces',serif;
+            font-size:24px;
+            color:var(--cream);
+        }
+        .logo span { color:var(--lightgold); }
+        .back {
+            padding:12px 20px;
+            border:1px solid #dcae5566;
+            border-radius:30px;
+            color:var(--cream);
+            background:#081727bb;
+            backdrop-filter:blur(10px);
+            transition:.3s;
+        }
+        .back:hover {
+            color:var(--lightgold);
+            border-color:var(--gold);
+        }
+
+        /* CINEMATIC HERO */
+        .hero {
+            min-height:100vh;
+            position:relative;
+            overflow:hidden;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            padding:120px 20px 80px;
+            background:
+                    radial-gradient(ellipse at 50% 40%,
+                    #16587b88,transparent 62%),
+                    radial-gradient(circle at 85% 10%,
+                    #dcae5522,transparent 35%),
+                    linear-gradient(135deg,#050f1a,#0e2842,#050f1a);
+        }
+        .hero:after {
+            content:"";
+            position:absolute;
+            inset:0;
+            pointer-events:none;
+            background:linear-gradient(
+                    to top,#050f1a,transparent 35%);
+        }
+        .hero-content {
+            position:relative;
+            z-index:2;
+            max-width:850px;
+            animation:rise 1s ease both;
+        }
+        .eyebrow {
+            color:var(--gold);
+            font-size:12px;
+            font-weight:700;
+            letter-spacing:4px;
+            text-transform:uppercase;
+        }
+        .hero h1 {
+            font-family:'Fraunces',serif;
+            font-size:clamp(46px,8vw,105px);
+            font-weight:500;
+            line-height:1.1;
+            margin:25px 0;
+            text-shadow:0 15px 40px #0008;
+        }
+        .hero h1 span {
+            color:var(--lightgold);
+            text-shadow:0 0 45px #dcae5555;
+        }
+        .hero p {
+            max-width:610px;
+            margin:auto;
+            color:var(--muted);
+            line-height:1.9;
+            font-size:17px;
+        }
+        .gold-btn {
+            display:inline-block;
+            padding:15px 28px;
+            border:0;
+            border-radius:30px;
+            font-weight:700;
+            color:var(--navy);
+            background:linear-gradient(
+                    135deg,#ecc983,#dcae55,#b58c3c);
+            box-shadow:0 15px 45px #dcae5540;
+            transition:.3s;
+        }
+        .gold-btn:hover {
+            transform:translateY(-4px);
+            box-shadow:0 20px 50px #dcae5570;
+        }
+        .enter { margin-top:35px; }
+
+        /* FLOATING BOOK DECORATIONS */
+        .floating-book {
+            position:absolute;
+            width:150px;
+            height:215px;
+            border-radius:5px 16px 16px 5px;
+            background:linear-gradient(
+                    135deg,#16587b,#0e2842,#081727);
+            border:1px solid #ecc98377;
+            box-shadow:
+                    -15px 25px 50px #0009,
+                    inset 10px 0 #0004;
+            animation:float 6s ease-in-out infinite;
+        }
+        .floating-book.left {
+            left:6%;top:35%;
+            rotate:-18deg;
+        }
+        .floating-book.right {
+            right:6%;top:25%;
+            rotate:16deg;
+            animation-delay:-3s;
+        }
+
+        /* COLLECTION */
+        .collection {
+            min-height:100vh;
+            padding:90px 6%;
+            background:
+                    radial-gradient(circle at 85% 10%,
+                    #16587b55,transparent 35%),
+                    radial-gradient(circle at 10% 85%,
+                    #dcae5512,transparent 40%),
+                    var(--navy);
+        }
+        .section-title {
+            font-family:'Fraunces',serif;
+            font-size:clamp(32px,4vw,55px);
+            font-weight:500;
+            margin:15px 0;
+        }
+        .section-title span { color:var(--lightgold); }
+        .section-description {
+            color:var(--muted);
+            margin-bottom:35px;
+        }
+        .toolbar {
+            display:flex;
+            flex-wrap:wrap;
+            gap:14px;
+            margin-bottom:20px;
+        }
+        .toolbar input,.toolbar select {
+            padding:15px 18px;
+            border-radius:12px;
+            border:1px solid #84b3ce55;
+            color:var(--cream);
+            background:#081727;
+        }
+        .toolbar input {
+            flex:1;
+            min-width:200px;
+        }
+        .toolbar input:focus,.toolbar select:focus {
+            border-color:var(--gold);
+            outline:none;
+        }
+        .results {
+            color:var(--muted);
+            font-size:13px;
+            margin:20px 0 30px;
+        }
+        .grid {
+            display:grid;
+            grid-template-columns:
+        repeat(auto-fill,minmax(230px,1fr));
+            gap:30px;
+        }
+
+        /* BOOK CARDS */
+        .book-card {
+            position:relative;
+            padding:17px;
+            border-radius:20px;
+            background:linear-gradient(
+                    145deg,#1e4467cc,#081727f8);
+            border:1px solid #84b3ce33;
+            box-shadow:0 18px 40px #0007;
+            transition:transform .35s,box-shadow .35s,
+            border-color .35s;
+        }
+        .book-card:hover {
+            transform:translateY(-10px);
+            border-color:#dcae55aa;
+            box-shadow:
+                    0 30px 65px #000a,
+                    0 0 40px #dcae5522;
+        }
+        .stock {
+            position:absolute;
+            top:25px;right:25px;
+            z-index:2;
+            background:#081727ee;
+            border:1px solid #dcae5577;
+            color:var(--lightgold);
+            border-radius:25px;
+            padding:7px 10px;
+            font-size:10px;
+            font-weight:700;
+        }
+        .stock.out {
+            color:#f0a898;
+            border-color:#f0a89877;
+        }
+
+        /* 3D BOOK */
+        .scene {
+            height:295px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            perspective:1100px;
+        }
+        .book3d {
+            position:relative;
+            width:175px;
+            height:245px;
+            transform-style:preserve-3d;
+            transform:rotateY(-24deg) rotateX(5deg);
+            transition:transform .45s ease;
+            filter:drop-shadow(20px 25px 14px #0009);
+        }
+        .book-card:hover .book3d {
+            transform:rotateY(-8deg) rotateX(2deg)
+            translateY(-10px);
+        }
+        .front {
+            position:absolute;
+            inset:0;
+            overflow:hidden;
+            border-radius:3px 8px 8px 3px;
+            background:linear-gradient(
+                    145deg,#16587b,#0e2842,#081727);
+            border:1px solid #ecc98377;
+            transform:translateZ(12px);
+            backface-visibility:hidden;
+        }
+        .front img {
+            display:block;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+        .fallback {
+            height:100%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:18px;
+            text-align:center;
+            font-family:'Fraunces',serif;
+            font-size:22px;
+            overflow-wrap:anywhere;
+        }
+        .spine {
+            position:absolute;
+            width:24px;
+            height:100%;
+            left:0;top:0;
+            background:linear-gradient(
+                    90deg,#050f1a,#16587b);
+            transform-origin:left center;
+            transform:rotateY(-90deg);
+        }
+        .pages {
+            position:absolute;
+            width:24px;
+            height:calc(100% - 8px);
+            right:0;top:4px;
+            background:repeating-linear-gradient(
+                    0deg,#f3ecdc 0px,#f3ecdc 2px,
+                    #c7bcaa 3px);
+            transform-origin:right center;
+            transform:rotateY(90deg);
+        }
+        .back-cover {
+            position:absolute;
+            inset:0;
+            background:#0e2842;
+            transform:translateZ(-12px) rotateY(180deg);
+        }
+        .book-category {
+            color:var(--gold);
+            font-size:11px;
+            font-weight:700;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+        }
+        .book-title {
+            font-family:'Fraunces',serif;
+            font-size:21px;
+            margin:10px 0 7px;
+            overflow-wrap:anywhere;
+        }
+        .book-author {
+            color:var(--muted);
+            font-size:13px;
+            margin-bottom:20px;
+        }
+        .explore {
+            width:100%;
+            border-radius:11px;
+        }
+        .empty {
+            display:none;
+            padding:60px 20px;
+            text-align:center;
+            color:var(--muted);
+        }
+
+        /* FULL SCREEN DETAILS */
+        .details {
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:100;
+            overflow-y:auto;
+            padding:90px 6% 50px;
+            background:
+                    radial-gradient(circle at 80% 20%,
+                    #16587b88,transparent 45%),
+                    radial-gradient(circle at 15% 80%,
+                    #dcae5520,transparent 40%),
+                    #050f1a;
+        }
+        .details.show {
+            display:block;
+            animation:rise .4s ease;
+        }
+        .close {
+            position:fixed;
+            top:25px;
+            right:5%;
+            z-index:101;
+            background:#081727ee;
+            color:var(--cream);
+            padding:12px 20px;
+            border:1px solid #dcae5577;
+            border-radius:30px;
+        }
+        .close:hover { color:var(--lightgold); }
+        .details-layout {
+            max-width:1150px;
+            margin:auto;
+            min-height:calc(100vh - 140px);
+            display:grid;
+            grid-template-columns:1fr 1.1fr;
+            align-items:center;
+            gap:65px;
+        }
+        .details .scene {
+            height:520px;
+            perspective:1300px;
+        }
+        .details .book3d {
+            width:285px;
+            height:405px;
+            transform:rotateY(-24deg) rotateX(5deg);
+            transition:transform .12s ease-out;
+        }
+        .details .spine,.details .pages { width:35px; }
+        .details .front { transform:translateZ(17px); }
+        .details .back-cover {
+            transform:translateZ(-17px) rotateY(180deg);
+        }
+        .details h1 {
+            font-family:'Fraunces',serif;
+            font-size:clamp(36px,5vw,65px);
+            font-weight:500;
+            line-height:1.15;
+            overflow-wrap:anywhere;
+        }
+        .details p {
+            color:var(--muted);
+            font-size:16px;
+            line-height:2;
+        }
+        .details strong { color:var(--cream); }
+        .availability {
+            display:inline-block;
+            margin-top:18px;
+            padding:12px 20px;
+            color:var(--lightgold);
+            border:1px solid #dcae5577;
+            background:#dcae5518;
+            border-radius:30px;
+        }
+        .rotate-tip {
+            color:var(--muted);
+            text-align:center;
+            font-size:13px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes rise {
+            from { opacity:0;transform:translateY(30px); }
+            to { opacity:1;transform:translateY(0); }
+        }
+        @keyframes float {
+            0%,100% { translate:0 0; }
+            50% { translate:0 -25px; }
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:850px) {
+            .floating-book { display:none; }
+            .details-layout {
+                grid-template-columns:1fr;
+                gap:20px;
+            }
+            .details .scene { height:430px; }
+        }
+        @media(max-width:500px) {
+            .topbar { padding:20px; }
+            .logo { font-size:17px; }
+            .back { font-size:11px;padding:10px; }
+            .collection { padding:70px 20px; }
+            .grid {
+                grid-template-columns:
+            repeat(auto-fill,minmax(145px,1fr));
+                gap:15px;
+            }
+            .book-card { padding:11px; }
+            .scene { height:215px; }
+            .book3d { width:120px;height:175px; }
+            .fallback { font-size:17px; }
+            .book-title { font-size:17px; }
+            .details { padding:90px 20px 40px; }
+            .details .book3d { width:200px;height:285px; }
+            .details .scene { height:340px; }
+        }
+        @media(prefers-reduced-motion:reduce) {
+            *,*::before,*::after {
+                animation:none!important;
+                transition:none!important;
+                scroll-behavior:auto!important;
+            }
+        }
+
+        /* BOOK ACTIONS & REVIEWS — UI ONLY */
+        .book-actions { display:flex; flex-wrap:wrap; gap:12px; margin:24px 0 14px; }
+        .book-actions button { flex:1; min-width:145px; padding:15px 20px; border-radius:12px; font-weight:700; transition:transform .2s, border-color .2s; }
+        .book-actions button:hover { transform:translateY(-2px); }
+        .cart-btn { color:var(--cream); background:#102d48; border:1px solid #dcae5577; }
+        .cart-btn:hover { border-color:var(--lightgold); }
+        .action-hint { font-size:12px!important; line-height:1.5!important; margin:0 0 20px; }
+        .reviews-panel { margin-top:26px; padding-top:24px; border-top:1px solid #84b3ce44; }
+        .reviews-panel h2 { font-family:'Fraunces',serif; font-weight:500; font-size:28px; margin:0 0 14px; }
+        .review-summary { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+        .review-stars { color:var(--lightgold); letter-spacing:3px; font-size:22px; }
+        .review-summary small { color:var(--muted); }
+        .review-list { display:grid; gap:12px; margin-bottom:22px; }
+        .review-card { background:#0e2842aa; border:1px solid #84b3ce33; border-radius:13px; padding:15px; }
+        .review-card strong { font-size:14px; }
+        .review-card .review-stars { font-size:15px; margin:7px 0; }
+        .review-card p { font-size:14px; line-height:1.6; margin:5px 0 0; }
+        .review-form { display:grid; gap:12px; }
+        .review-form label { color:var(--cream); font-size:13px; font-weight:600; }
+        .review-form input,.review-form select,.review-form textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #84b3ce55; background:#081727; color:var(--cream); font:inherit; }
+        .review-form textarea { min-height:85px; resize:vertical; }
+        .review-form button { justify-self:start; }
+        .ui-toast { position:fixed; bottom:25px; left:50%; transform:translateX(-50%); z-index:200; background:#102d48; color:var(--cream); border:1px solid var(--gold); border-radius:12px; padding:14px 20px; box-shadow:0 12px 35px #0009; max-width:min(90vw,440px); text-align:center; }
+
+
+        /* Book cover image fix */
+        .book3d .front {
+            overflow: hidden;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .book3d .front img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .book3d .back-cover {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .explore {
+            width: 100%;
+            display: block;
+            margin-top: 15px;
+            padding: 17px 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .book-price {
+            margin: 20px 0;
+            color: #ecc983;
+            font-family: 'Fraunces', serif;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 7px 15px;
+            border: 1px solid rgba(220,174,85,.25);
+            border-radius: 30px;
+            background: rgba(8,23,39,.8);
+        }
+
+        .user-avatar {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#ecc983,#b58c3c);
+            color: #050f1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .user-details small {
+            color: #9db6cb;
+            font-size: 10px;
+        }
+
+        .user-details strong {
+            color: #f3ecdc;
+            font-size: 13px;
+        }
+
+        .logout-btn {
+            padding: 12px 20px;
+            border-radius: 30px;
+            background: transparent;
+            color: #ecc983;
+            border: 1px solid rgba(220,174,85,.55);
+            font-weight: 700;
+            cursor: pointer;
+            transition: .25s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(220,174,85,.15);
+        }
+
+        @media (max-width: 600px) {
+            .user-profile {
+                padding: 5px 9px;
+            }
+
+            .user-details strong {
+                max-width: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .logout-btn {
+                padding: 10px 12px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+
+    <a th:href="@{/books}" class="logo">
+        The <span>Midnight Library</span>
+    </a>
+
+    <div class="nav-actions">
+
+        <a href="#collection" class="nav-link">
+            Explore Books
+        </a>
+
+        <!-- GUEST: NOT LOGGED IN -->
+        <th:block th:unless="${loggedIn}">
+
+            <a th:href="@{/login}" class="nav-link">
+                Login
+            </a>
+
+            <a th:href="@{/register}" class="signup-btn">
+                Sign Up →
+            </a>
+
+        </th:block>
+
+        <!-- AUTHENTICATED USER -->
+        <th:block th:if="${loggedIn}">
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+                    <span th:text="${#strings.substring(username,0,1).toUpperCase()}">
+                        U
+                    </span>
+                </div>
+
+                <div class="user-details">
+                    <small>Welcome back</small>
+
+                    <strong th:text="${username}">
+                        Username
+                    </strong>
+                </div>
+
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    Logout
+                </button>
+            </form>
+
+        </th:block>
+
+    </div>
+
+</nav>
+
+<!-- FULL SCREEN ENTRANCE -->
+<section class="hero">
+    <div class="floating-book left" aria-hidden="true"></div>
+    <div class="floating-book right" aria-hidden="true"></div>
+
+    <div class="hero-content">
+        <div class="eyebrow">Welcome to a World of Stories</div>
+
+        <h1>
+            Every Book Holds<br>
+            A <span>New Universe.</span>
+        </h1>
+
+        <p>
+            Beyond every cover lies a new adventure.
+            Discover unforgettable stories, timeless classics
+            and extraordinary worlds waiting to be explored.
+        </p>
+
+        <a href="#collection" class="gold-btn enter">
+            Enter the Bookstore →
+        </a>
+    </div>
+</section>
+
+<!-- BOOK COLLECTION -->
+<section class="collection" id="collection">
+
+    <div class="eyebrow">The Collection</div>
+
+    <h2 class="section-title">
+        Explore Our <span>Books</span>
+    </h2>
+
+    <p class="section-description">
+        Discover your next favorite story.
+    </p>
+
+    <div class="toolbar">
+        <input id="searchInput"
+               type="search"
+               placeholder="Search title, author or ISBN..."
+               aria-label="Search books">
+
+        <select id="categoryFilter"
+                aria-label="Filter by category">
+            <option value="all">All Categories</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category}"
+                    th:text="${category}">
+            </option>
+        </select>
+
+        <select id="sortBooks" aria-label="Sort books">
+            <option value="default">Default Order</option>
+            <option value="az">Title A–Z</option>
+            <option value="za">Title Z–A</option>
+            <option value="stock">Most Available</option>
+        </select>
+    </div>
+
+    <p class="results" id="resultsCount"
+       aria-live="polite"></p>
+
+    <div class="grid" id="bookGrid">
+
+        <!-- ONE CARD FOR EACH BOOK -->
+        <article class="book-card"
+                 th:each="book : ${books}"
+                 th:attr="data-title=${book.title},
+                  data-author=${book.author},
+                  data-isbn=${book.isbn},
+                  data-category=${book.category},
+                  data-quantity=${book.quantity},
+                  data-image=${book.imageName},
+                  data-price=${book.price}">
+
+            <span class="stock"
+                  th:classappend="${book.quantity <= 0} ? ' out' : ''"
+                  th:text="${book.quantity > 0} ? 'IN STOCK' : 'SOLD OUT'">
+                IN STOCK
+            </span>
+
+            <!-- 3D COVER -->
+            <div class="scene">
+                <div class="book3d">
+                    <div class="front">
+                        <img th:if="${book.imageName != null and !book.imageName.isEmpty()}"
+                             th:src="@{/book-covers/{name}(name=${book.imageName})}"
+                             th:alt="${book.title}">
+
+                        <div class="fallback"
+                             th:unless="${book.imageName != null and !book.imageName.isEmpty()}"
+                             th:text="${book.title}">
+                            Book Title
+                        </div>
+                    </div>
+                    <div class="spine"></div>
+                    <div class="pages"></div>
+                    <div class="back-cover"></div>
+                </div>
+            </div>
+
+            <div class="book-category"
+                 th:text="${book.category}">Category</div>
+
+            <h3 class="book-title"
+                th:text="${book.title}">Book Title</h3>
+
+            <p class="book-author"
+               th:text="'By ' + ${book.author}">
+                By Author
+            </p>
+
+            <button type="button" class="gold-btn explore">
+                Explore Book →
+            </button>
+        </article>
+    </div>
+
+    <div class="empty" id="emptyMessage">
+        <h3>No books found</h3>
+        <p>Try another search or category.</p>
+    </div>
+</section>
+
+<!-- FULL SCREEN DETAILS -->
+<section class="details"
+         id="detailsScreen"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="detailTitle">
+
+    <button class="close" id="closeDetails" type="button">
+        ← Back to Books
+    </button>
+
+    <div class="details-layout">
+
+        <div>
+            <div class="scene" id="detailScene">
+                <div class="book3d" id="detailBook">
+                    <div class="front" id="detailFront">
+                        <img id="detailImage"
+                             alt="Selected book cover"
+                             style="display:none;">
+                        <div class="fallback"
+                             id="detailFallback"></div>
+                    </div>
+                    <div class="spine"></div>
+                    <div class="pages"></div>
+                    <div class="back-cover"></div>
+                </div>
+            </div>
+            <p class="rotate-tip">
+                Move your mouse over the book to rotate it in 3D
+            </p>
+        </div>
+
+        <div>
+            <div class="eyebrow">Discover This Book</div>
+
+            <h1 id="detailTitle"></h1>
+
+            <p><strong>Author:</strong>
+                <span id="detailAuthor"></span></p>
+
+            <p><strong>Category:</strong>
+                <span id="detailCategory"></span></p>
+
+            <p><strong>ISBN:</strong>
+                <span id="detailIsbn"></span></p>
+
+
+            <div class="book-price">
+                Rs. <span id="detailPrice">0.00</span>
+            </div>
+
+
+            <p><strong>Available Copies:</strong>
+                <span id="detailQuantity"></span></p>
+
+            <div class="availability" id="detailStock"></div>
+
+            <!-- UI PREVIEW: no cart/order integration -->
+            <div class="book-actions">
+                <button type="button" class="gold-btn" id="buyNowBtn">Buy Now →</button>
+                <button type="button" class="cart-btn" id="addCartBtn">🛒 Add to Cart</button>
+            </div>
+
+            <section class="reviews-panel" aria-labelledby="reviewsHeading">
+                <h2 id="reviewsHeading">Customer Reviews</h2>
+                <div class="review-summary">
+                    <span class="review-stars" aria-label="No ratings yet">☆☆☆☆☆</span>
+                    <small>No reviews yet</small>
+                </div>
+                <div class="review-list" id="reviewList">
+                    <div class="review-card" id="reviewEmpty">
+                        <p>Be the first to review this book.</p>
+                    </div>
+                </div>
+                <form class="review-form" id="reviewForm">
+                    <label for="reviewName">Your name</label>
+                    <input id="reviewName" name="name" maxlength="60" placeholder="Enter your name" required>
+                    <label for="reviewRating">Your rating</label>
+                    <select id="reviewRating" name="rating" required>
+                        <option value="">Select a rating</option>
+                        <option value="5">★★★★★ — 5 stars</option>
+                        <option value="4">★★★★☆ — 4 stars</option>
+                        <option value="3">★★★☆☆ — 3 stars</option>
+                        <option value="2">★★☆☆☆ — 2 stars</option>
+                        <option value="1">★☆☆☆☆ — 1 star</option>
+                    </select>
+                    <label for="reviewComment">Your review</label>
+                    <textarea id="reviewComment" name="comment" maxlength="500" placeholder="What did you think of this book?" required></textarea>
+                    <button class="gold-btn" type="submit">Preview Review</button>
+                </form>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const sortBooks = document.getElementById("sortBooks");
+    const bookGrid = document.getElementById("bookGrid");
+    const resultsCount = document.getElementById("resultsCount");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    const cards = Array.from(
+        document.querySelectorAll(".book-card")
+    );
+
+    // SEARCH AND FILTER
+    function filterBooks() {
+        const search = searchInput.value.toLowerCase().trim();
+        const category = categoryFilter.value.toLowerCase();
+
+        let count = 0;
+
+        cards.forEach(function(card) {
+            const title = card.dataset.title.toLowerCase();
+            const author = card.dataset.author.toLowerCase();
+            const isbn = card.dataset.isbn.toLowerCase();
+            const bookCategory = card.dataset.category.toLowerCase();
+
+            const matchesSearch =
+                title.includes(search) ||
+                author.includes(search) ||
+                isbn.includes(search);
+
+            const matchesCategory =
+                category === "all" || bookCategory === category;
+
+            const visible = matchesSearch && matchesCategory;
+            card.style.display = visible ? "" : "none";
+
+            if (visible) count++;
+        });
+
+        resultsCount.textContent = count + " books found";
+        emptyMessage.style.display =
+            count === 0 ? "block" : "none";
+    }
+
+    searchInput.addEventListener("input", filterBooks);
+    categoryFilter.addEventListener("change", filterBooks);
+
+    // SORT BOOKS
+    sortBooks.addEventListener("change", function() {
+        const sorted = cards.slice();
+        const value = sortBooks.value;
+
+        if (value === "az") {
+            sorted.sort((a,b) =>
+                a.dataset.title.localeCompare(b.dataset.title));
+        } else if (value === "za") {
+            sorted.sort((a,b) =>
+                b.dataset.title.localeCompare(a.dataset.title));
+        } else if (value === "stock") {
+            sorted.sort((a,b) =>
+                Number(b.dataset.quantity) -
+                Number(a.dataset.quantity));
+        }
+
+        sorted.forEach(card => bookGrid.appendChild(card));
+    });
+
+    // FULL SCREEN BOOK DETAILS
+    const screen = document.getElementById("detailsScreen");
+    const closeButton = document.getElementById("closeDetails");
+    const detailBook = document.getElementById("detailBook");
+    const detailScene = document.getElementById("detailScene");
+    const detailImage = document.getElementById("detailImage");
+    const detailFallback = document.getElementById("detailFallback");
+
+    let previousFocus = null;
+
+    cards.forEach(function(card) {
+        card.querySelector(".explore").addEventListener(
+            "click", function() {
+
+                previousFocus = document.activeElement;
+
+                const book = card.dataset;
+
+                document.getElementById("detailTitle").textContent =
+                    book.title;
+
+                document.getElementById("detailAuthor").textContent =
+                    book.author;
+
+                document.getElementById("detailCategory").textContent =
+                    book.category;
+
+                document.getElementById("detailIsbn").textContent =
+                    book.isbn;
+
+                document.getElementById("detailQuantity").textContent =
+                    book.quantity;
+
+                document.getElementById("detailPrice").textContent =
+                    Number(book.price || 0).toLocaleString("en-LK", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                document.getElementById("detailStock").textContent =
+                    Number(book.quantity) > 0
+                        ? "Available Now"
+                        : "Currently Out of Stock";
+
+                // Use the exact image URL generated by Thymeleaf.
+                const sourceImage = card.querySelector(".front img");
+
+                if (sourceImage) {
+                    detailImage.src = sourceImage.src;
+                    detailImage.style.display = "block";
+                    detailFallback.style.display = "none";
+                } else {
+                    detailImage.removeAttribute("src");
+                    detailImage.style.display = "none";
+                    detailFallback.style.display = "flex";
+                    detailFallback.textContent = book.title;
+                }
+
+                // Reviews are only previews, scoped to the selected book.
+                currentReviewIsbn = book.isbn;
+                renderPreviewReviews();
+
+                detailBook.style.transform =
+                    "rotateY(-24deg) rotateX(5deg)";
+
+                screen.classList.add("show");
+                document.body.style.overflow = "hidden";
+                closeButton.focus();
+            });
+    });
+
+    // UI-only actions: no cart, order, or database requests.
+    const previewReviews = new Map();
+    let currentReviewIsbn = null;
+    let toastTimeout;
+
+    function showPreviewMessage(message) {
+        const existing = document.querySelector(".ui-toast");
+        if (existing) existing.remove();
+        clearTimeout(toastTimeout);
+        const toast = document.createElement("div");
+        toast.className = "ui-toast";
+        toast.setAttribute("role", "status");
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        toastTimeout = setTimeout(() => toast.remove(), 3500);
+    }
+
+    document.getElementById("buyNowBtn").addEventListener("click", () =>
+        showPreviewMessage("Buy Now is a UI preview. Checkout is not connected."));
+    document.getElementById("addCartBtn").addEventListener("click", () =>
+        showPreviewMessage("Add to Cart is a UI preview. No item was added."));
+
+    function renderPreviewReviews() {
+        const list = document.getElementById("reviewList");
+        list.replaceChildren();
+        const reviews = previewReviews.get(currentReviewIsbn) || [];
+        const summary = document.querySelector(".review-summary");
+        const stars = summary.querySelector(".review-stars");
+        const count = summary.querySelector("small");
+        if (!reviews.length) {
+            stars.textContent = "☆☆☆☆☆";
+            stars.setAttribute("aria-label", "No ratings yet");
+            count.textContent = "No reviews yet";
+            const empty = document.createElement("div");
+            empty.className = "review-card";
+            empty.textContent = "Be the first to review this book.";
+            list.appendChild(empty);
+            return;
+        }
+        const average = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+        const rounded = Math.round(average);
+        stars.textContent = "★".repeat(rounded) + "☆".repeat(5 - rounded);
+        stars.setAttribute("aria-label", average.toFixed(1) + " out of 5 stars");
+        count.textContent = average.toFixed(1) + " / 5 · " + reviews.length + " preview review(s)";
+        reviews.forEach(review => {
+            const card = document.createElement("div");
+            card.className = "review-card";
+            const name = document.createElement("strong");
+            name.textContent = review.name;
+            const rating = document.createElement("div");
+            rating.className = "review-stars";
+            rating.textContent = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+            const comment = document.createElement("p");
+            comment.textContent = review.comment;
+            card.append(name, rating, comment);
+            list.appendChild(card);
+        });
+    }
+
+    document.getElementById("reviewForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        if (!this.reportValidity() || !currentReviewIsbn) return;
+        const review = {
+            name: document.getElementById("reviewName").value.trim(),
+            rating: Number(document.getElementById("reviewRating").value),
+            comment: document.getElementById("reviewComment").value.trim()
+        };
+        if (!review.name || !review.comment || review.rating < 1 || review.rating > 5) return;
+        const reviews = previewReviews.get(currentReviewIsbn) || [];
+        reviews.unshift(review);
+        previewReviews.set(currentReviewIsbn, reviews);
+        renderPreviewReviews();
+        this.reset();
+        showPreviewMessage("Review preview added on this page only. Not saved to the database.");
+    });
+
+    // INTERACTIVE 3D ROTATION
+    detailScene.addEventListener("pointermove", function(event) {
+        if (event.pointerType === "touch") return;
+
+        const rect = detailScene.getBoundingClientRect();
+
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+
+        const rotateY = -45 + x * 90;
+        const rotateX = 20 - y * 40;
+
+        detailBook.style.transform =
+            "rotateY(" + rotateY + "deg) " +
+            "rotateX(" + rotateX + "deg)";
+    });
+
+    detailScene.addEventListener("pointerleave", function() {
+        detailBook.style.transform =
+            "rotateY(-24deg) rotateX(5deg)";
+    });
+
+    // CLOSE DETAILS
+    function closeDetails() {
+        screen.classList.remove("show");
+        document.body.style.overflow = "";
+
+        if (previousFocus) previousFocus.focus();
+    }
+
+    closeButton.addEventListener("click", closeDetails);
+
+    document.addEventListener("keydown", function(event) {
+        if (!screen.classList.contains("show")) return;
+
+        if (event.key === "Escape") {
+            closeDetails();
+        }
+
+        // Keep keyboard focus inside the open details screen.
+        if (event.key === "Tab") {
+            event.preventDefault();
+            closeButton.focus();
+        }
+    });
+
+    filterBooks();
+</script>
+</body>
+</html>
+
+```
