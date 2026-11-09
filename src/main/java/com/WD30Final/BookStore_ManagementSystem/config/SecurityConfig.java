@@ -1,5 +1,5 @@
-package com.WD30Final.BookStore_ManagementSystem.config;
 
+package com.WD30Final.BookStore_ManagementSystem.config;
 
 import com.WD30Final.BookStore_ManagementSystem.entity.Admin;
 import com.WD30Final.BookStore_ManagementSystem.repository.UserRepository;
@@ -29,6 +29,7 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             boolean isAdmin = authentication.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
             if (isAdmin) {
                 response.sendRedirect("/admin/dashboard");
             } else {
@@ -38,20 +39,47 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/admin/**", "/users/**").hasRole("ADMIN")
-                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
+
+                        // Public pages - login not required
+                        .requestMatchers(
+                                "/",
+                                "/books",
+                                "/books/**",
+                                "/book-covers/**",
+                                "/login",
+                                "/register",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
+                        ).permitAll()
+
+                        // Admin pages - ADMIN only
+                        .requestMatchers(
+                                "/admin/**",
+                                "/users/**"
+                        ).hasRole("ADMIN")
+
+                        // Customer pages - CUSTOMER only
+                        .requestMatchers(
+                                "/customer/**"
+                        ).hasRole("CUSTOMER")
+
+                        // All remaining pages require login
                         .anyRequest().authenticated()
                 )
+
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .successHandler(customAuthenticationSuccessHandler())
                         .permitAll()
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
@@ -62,20 +90,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration)
+            throws Exception {
+
         return configuration.getAuthenticationManager();
     }
+
     @Bean
-    public CommandLineRunner initAdminUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner initAdminUser(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+
         return args -> {
             if (!userRepository.existsByEmail("admin@gmail.com")) {
+
                 Admin admin = new Admin();
                 admin.setName("System Admin");
                 admin.setEmail("admin@gmail.com");
-                admin.setPassword(passwordEncoder.encode("admin123"));
+                admin.setPassword(
+                        passwordEncoder.encode("admin123")
+                );
                 admin.setEmployeeId("EMP-ADMIN-01");
+
                 userRepository.save(admin);
-                System.out.println("Admin account created successfully!");
+
+                System.out.println(
+                        "Admin account created successfully!"
+                );
             }
         };
     }
