@@ -43,7 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**", "/users/**").hasRole("ADMIN")
-                        .requestMatchers("/customer/**","/orders","/orders/**").hasRole("CUSTOMER")
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                        .requestMatchers("/wishlist/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

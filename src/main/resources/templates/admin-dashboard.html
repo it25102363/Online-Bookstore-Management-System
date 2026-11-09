@@ -1,665 +1,173 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard - Bookstore</title>
-
-    <!-- Existing CSS Files -->
-    <link rel="stylesheet"
-          th:href="@{/css/style.css}">
-
-    <link rel="stylesheet"
-          th:href="@{/css/dashboard.css}">
-
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
-
 <body>
 
-<!-- ========================================
-     ADMIN SIDEBAR
-======================================== -->
-
+<!-- Sidebar -->
 <aside class="sidebar">
-
     <div class="sidebar-top">
-
-        <!-- Logo -->
         <div class="logo-area">
-
-            <svg viewBox="0 0 24 24"
-                 aria-hidden="true">
-
+            <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/>
-
                 <path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/>
-
             </svg>
-
             Bookstore
-
         </div>
-
-        <!-- Sidebar Navigation -->
         <div>
-
-            <p class="sidebar-label">
-                Manage
-            </p>
-
+            <p class="sidebar-label">Manage</p>
             <ul class="sidebar-menu">
-
-                <!-- HOME -->
-                <li>
-                    <a th:href="@{/admin/dashboard}"
-                       class="active">
-
-                        <svg viewBox="0 0 24 24">
-                            <path d="M3 11l9-8 9 8"/>
-                            <path d="M5 10v10h14V10"/>
-                        </svg>
-
-                        Home
-                    </a>
-                </li>
-
-                <!-- INVENTORY -->
-                <li>
-                    <a th:href="@{/books}">
-
-                        <svg viewBox="0 0 24 24">
-                            <path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/>
-                            <path d="M9 8h6"/>
-                        </svg>
-
-                        Inventory
-                    </a>
-                </li>
-
-                <!-- NEW: ORDER MANAGEMENT -->
-                <li>
-                    <a th:href="@{/admin/orders}">
-
-                        <svg viewBox="0 0 24 24">
-                            <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/>
-                            <path d="M9 8h6M9 12h6"/>
-                        </svg>
-
-                        Manage Orders
-                    </a>
-                </li>
-
-                <!-- FEEDBACK -->
-                <li>
-                    <a th:href="@{/admin/feedback}">
-
-                        <svg viewBox="0 0 24 24">
-                            <path d="M4 5h16v11H9l-5 4V5z"/>
-                        </svg>
-
-                        Feedback
-                    </a>
-                </li>
-
+                <li><a th:href="@{/admin/dashboard}" class="active">
+                    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a></li>
+                <li><a th:href="@{/books}">
+                    <svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg>Inventory</a></li>
+                <li><a th:href="@{/admin/feedback}">
+                    <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></svg>Feedback</a></li>
             </ul>
-
         </div>
-
     </div>
-
-    <!-- Logout -->
     <div class="sidebar-bottom">
-
-        <form th:action="@{/logout}"
-              method="post">
-
-            <button type="submit"
-                    class="btn-danger"
-                    style="width:100%; cursor:pointer;">
-
-                Logout
-
-            </button>
-
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-danger" style="width:100%; cursor:pointer;">Logout</button>
         </form>
-
     </div>
-
 </aside>
 
-
-<!-- ========================================
-     MAIN DASHBOARD CONTENT
-======================================== -->
-
+<!-- Main content -->
 <main class="main-content">
-
     <div class="page">
 
-        <!-- Dashboard Header -->
         <header class="page-head">
-
             <div>
-
                 <p class="eyebrow" id="today"></p>
-
-                <h1>
-
-                    <span id="greeting">
-                        Welcome back
-                    </span>,
-
-                    <span class="accent"
-                          th:text="${user != null ? user.name : 'System Admin'}">
-                        System Admin
-                    </span>
-
-                </h1>
-
-                <p class="page-sub">
-                    Here is how your bookstore is doing today.
-                </p>
-
+                <h1><span id="greeting">Welcome back</span>, <span class="accent" th:text="${user != null ? user.name : 'System Admin'}">System Admin</span></h1>
+                <p class="page-sub">Here is how your bookstore is doing today.</p>
             </div>
-
-            <!-- Inventory Button -->
-            <a th:href="@{/books}"
-               class="btn-primary">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 5v14M5 12h14"/>
-                </svg>
-
-                Manage inventory
-
+            <a th:href="@{/books}" class="btn-primary">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Manage inventory
             </a>
-
         </header>
 
-
-        <!-- ========================================
-             DASHBOARD STATISTICS
-        ======================================== -->
-
+        <!-- Stats -->
         <div class="stats-grid">
-
-            <!-- TOTAL USERS -->
             <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="label">
-                        Total Users
-                    </span>
-
-                    <span class="stat-ico">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <circle cx="9"
-                                    cy="8"
-                                    r="3.5"/>
-
-                            <path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/>
-
-                            <path d="M16 5a3.5 3.5 0 0 1 0 7M18 14.8c2.2.6 3.5 2.3 3.5 5.2"/>
-
-                        </svg>
-
-                    </span>
-
-                </div>
-
-                <span class="value"
-                      th:text="${totalUsers != null ? totalUsers : 0}">
-                    0
-                </span>
-
+                <div class="stat-top"><span class="label">Total Users</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 5a3.5 3.5 0 0 1 0 7M18 14.8c2.2.6 3.5 2.3 3.5 5.2"/></svg></span></div>
+                <span class="value" th:text="${totalUsers != null ? totalUsers : 4}">4</span>
             </div>
-
-
-            <!-- TOTAL BOOKS -->
             <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="label">
-                        Books in Library
-                    </span>
-
-                    <span class="stat-ico">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/>
-
-                            <path d="M9 8h6"/>
-
-                        </svg>
-
-                    </span>
-
-                </div>
-
-                <span class="value"
-                      th:text="${totalBooks != null ? totalBooks : 0}">
-                    0
-                </span>
-
+                <div class="stat-top"><span class="label">Books in library</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg></span></div>
+                <span class="value" th:text="${totalBooks != null ? totalBooks : 10}">10</span>
             </div>
-
-
-            <!-- TOTAL ORDERS - DATABASE CONNECTED -->
             <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="label">
-                        Total Orders
-                    </span>
-
-                    <span class="stat-ico">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/>
-
-                            <path d="M9 8h6M9 12h6"/>
-
-                        </svg>
-
-                    </span>
-
-                </div>
-
-                <!-- Value from OrderService -->
-                <span class="value"
-                      th:text="${totalOrders != null ? totalOrders : 0}">
-                    0
-                </span>
-
+                <div class="stat-top"><span class="label">Total Orders</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/></svg></span></div>
+                <span class="value" th:text="${totalOrders != null ? totalOrders : 0}">0</span>
             </div>
-
-
-            <!-- ADMIN ROLE -->
             <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="label">
-                        System Role
-                    </span>
-
-                    <span class="stat-ico">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3z"/>
-
-                        </svg>
-
-                    </span>
-
-                </div>
-
-                <span class="value"
-                      style="font-size:1.6rem; padding-top:0.35rem;">
-                    ADMIN
-                </span>
-
+                <div class="stat-top"><span class="label">System Role</span>
+                    <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3z"/></svg></span></div>
+                <span class="value" style="font-size:1.6rem; padding-top:0.35rem;">ADMIN</span>
             </div>
-
         </div>
 
-
-        <!-- ========================================
-             QUICK LINKS
-        ======================================== -->
-
+        <!-- Quick links -->
         <div class="quick">
-
-            <!-- INVENTORY -->
-            <a th:href="@{/books}"
-               class="quick-card">
-
-                <span class="stat-ico">
-
-                    <svg viewBox="0 0 24 24">
-
-                        <path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/>
-
-                        <path d="M9 8h6"/>
-
-                    </svg>
-
-                </span>
-
-                <div>
-
-                    <strong>Inventory</strong>
-
-                    <small>
-                        Add, edit and remove books
-                    </small>
-
-                </div>
-
+            <a th:href="@{/books}" class="quick-card">
+                <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg></span>
+                <div><strong>Inventory</strong><small>Add, edit and remove books</small></div>
             </a>
-
-
-            <!-- NEW: MANAGE ORDERS -->
-            <a th:href="@{/admin/orders}"
-               class="quick-card">
-
-                <span class="stat-ico">
-
-                    <svg viewBox="0 0 24 24">
-
-                        <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/>
-
-                        <path d="M9 8h6M9 12h6"/>
-
-                    </svg>
-
-                </span>
-
-                <div>
-
-                    <strong>Manage Orders</strong>
-
-                    <small>
-                        View, update and delete customer orders
-                    </small>
-
-                </div>
-
+            <a th:href="@{/admin/services}" class="quick-card">
+                <span class="stat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></span>
+                <div><strong>Services</strong><small>Manage store services</small></div>
             </a>
-
-
-            <!-- SERVICES -->
-            <a th:href="@{/admin/services}"
-               class="quick-card">
-
-                <span class="stat-ico">
-
-                    <svg viewBox="0 0 24 24">
-
-                        <circle cx="12"
-                                cy="12"
-                                r="3"/>
-
-                        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>
-
-                    </svg>
-
-                </span>
-
-                <div>
-
-                    <strong>Services</strong>
-
-                    <small>
-                        Manage store services
-                    </small>
-
-                </div>
-
+            <a th:href="@{/admin/feedback}" class="quick-card">
+                <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></svg></span>
+                <div><strong>Feedback</strong><small>Read what customers say</small></div>
             </a>
-
-
-            <!-- FEEDBACK -->
-            <a th:href="@{/admin/feedback}"
-               class="quick-card">
-
-                <span class="stat-ico">
-
-                    <svg viewBox="0 0 24 24">
-
-                        <path d="M4 5h16v11H9l-5 4V5z"/>
-
-                    </svg>
-
-                </span>
-
-                <div>
-
-                    <strong>Feedback</strong>
-
-                    <small>
-                        Read what customers say
-                    </small>
-
-                </div>
-
-            </a>
-
         </div>
 
-
-        <!-- ========================================
-             USER MANAGEMENT
-        ======================================== -->
-
+        <!-- User management -->
         <section class="panel">
-
             <div class="panel-head">
-
                 <div>
-
-                    <h2>
-                        User Management
-                    </h2>
-
-                    <p>
-                        CRUD overview of every registered account
-                    </p>
-
+                    <h2>User Management</h2>
+                    <p>CRUD overview of every registered account</p>
                 </div>
-
-                <!-- Search Users -->
-                <input id="userSearch"
-                       class="search"
-                       type="search"
-                       placeholder="Search name, email or role"
-                       aria-label="Search users">
-
+                <input id="userSearch" class="search" type="search" placeholder="Search name, email or role" aria-label="Search users">
             </div>
-
-
-            <!-- User Table -->
             <div class="table-responsive">
-
-                <table class="data-table"
-                       id="userTable">
-
+                <table class="data-table" id="userTable">
                     <thead>
-
                     <tr>
-
                         <th>ID</th>
-
                         <th>Name</th>
-
                         <th>Email</th>
-
                         <th>Role / Type</th>
-
                         <th>Actions</th>
-
                     </tr>
-
                     </thead>
-
                     <tbody>
-
-                    <!-- Display Users -->
                     <tr th:each="u : ${users}">
-
-                        <td th:text="${u.id}">
-                            1
-                        </td>
-
-                        <td class="cell-name">
-
-                            <span class="name"
-                                  th:text="${u.name}">
-                                John Doe
-                            </span>
-
-                        </td>
-
-                        <td th:text="${u.email}">
-                            john@example.com
-                        </td>
-
+                        <td th:text="${u.id}">1</td>
+                        <td class="cell-name"><span class="name" th:text="${u.name}">John Doe</span></td>
+                        <td th:text="${u.email}">john@example.com</td>
+                        <td><span class="role" th:text="${u.class.simpleName}">CUSTOMER</span></td>
                         <td>
-
-                            <span class="role"
-                                  th:text="${u.class.simpleName}">
-                                CUSTOMER
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <!-- DELETE USER -->
-                            <form th:action="@{/admin/users/delete/{id}(id=${u.id})}"
-                                  method="post"
-                                  style="display:inline;">
-
-                                <button type="submit"
-                                        class="btn-delete"
-                                        onclick="return confirm('Are you sure you want to delete this user?');">
-
-                                    Delete
-
-                                </button>
-
+                            <form th:action="@{/admin/users/delete/{id}(id=${u.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
                             </form>
-
                         </td>
-
                     </tr>
-
-
-                    <!-- No Users -->
-                    <tr class="empty-row"
-                        th:if="${users == null or users.empty}">
-
-                        <td colspan="5"
-                            style="text-align:center; padding:2rem;">
-
-                            No registered users found.
-
-                        </td>
-
+                    <tr class="empty-row" th:if="${users == null or users.empty}">
+                        <td colspan="5" style="text-align:center; padding:2rem;">No registered users found.</td>
                     </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </section>
 
     </div>
-
 </main>
 
-
-<!-- ========================================
-     DASHBOARD JAVASCRIPT
-======================================== -->
-
 <script>
-
     (function () {
-
-        // Greeting based on current time
+        // Greeting + date
         var h = new Date().getHours();
-
         document.getElementById("greeting").textContent =
-            h < 12
-                ? "Good morning"
-                : h < 18
-                    ? "Good afternoon"
-                    : "Good evening";
-
-
-        // Current Date
+            h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
         document.getElementById("today").textContent =
-            new Date().toLocaleDateString(
-                undefined,
-                {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric"
-                }
-            );
+            new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
 
-
-        // User Avatar Initials
-        var rows = document.querySelectorAll(
-            "#userTable tbody tr:not(.empty-row)"
-        );
-
+        // Avatar initials + role badge colours
+        var rows = document.querySelectorAll("#userTable tbody tr:not(.empty-row)");
         rows.forEach(function (tr) {
-
             var cell = tr.querySelector(".cell-name");
-
             if (cell) {
-
                 var av = document.createElement("span");
-
                 av.className = "avatar";
-
-                av.textContent =
-                    (cell.textContent.trim().charAt(0) || "?")
-                        .toUpperCase();
-
+                av.textContent = (cell.textContent.trim().charAt(0) || "?").toUpperCase();
                 cell.insertBefore(av, cell.firstChild);
             }
-
-
-            // Admin Badge Color
             var role = tr.querySelector(".role");
-
-            if (role && /admin/i.test(role.textContent)) {
-
-                role.classList.add("role-admin");
-
-            }
-
+            if (role && /admin/i.test(role.textContent)) role.classList.add("role-admin");
         });
 
-
-        // Live Search for Users
+        // Live search
         var box = document.getElementById("userSearch");
-
         box.addEventListener("input", function () {
-
             var q = box.value.trim().toLowerCase();
-
             rows.forEach(function (tr) {
-
-                tr.style.display =
-                    tr.textContent.toLowerCase().indexOf(q) === -1
-                        ? "none"
-                        : "";
-
+                tr.style.display = tr.textContent.toLowerCase().indexOf(q) === -1 ? "none" : "";
             });
-
         });
-
     })();
-
 </script>
-
 </body>
 </html>

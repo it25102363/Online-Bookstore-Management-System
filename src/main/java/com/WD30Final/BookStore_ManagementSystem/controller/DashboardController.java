@@ -1,13 +1,11 @@
-
 package com.WD30Final.BookStore_ManagementSystem.controller;
+
 
 import com.WD30Final.BookStore_ManagementSystem.entity.Admin;
 import com.WD30Final.BookStore_ManagementSystem.entity.Customer;
 import com.WD30Final.BookStore_ManagementSystem.entity.User;
-
 import com.WD30Final.BookStore_ManagementSystem.services.UserService;
-import com.WD30Final.BookStore_ManagementSystem.services.OrderService;
-
+import com.WD30Final.BookStore_ManagementSystem.services.WishlistService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,179 +15,93 @@ import org.springframework.web.bind.annotation.*;
 public class DashboardController {
 
     private final UserService userService;
-    private final OrderService orderService;
+    private final WishlistService wishlistService;
 
-    // Constructor Injection
-    public DashboardController(
-            UserService userService,
-            OrderService orderService) {
-
+    public DashboardController(UserService userService, WishlistService wishlistService) {
         this.userService = userService;
-        this.orderService = orderService;
+        this.wishlistService = wishlistService;
     }
 
-    // ==========================================
-    // ADMIN DASHBOARD
-    // ==========================================
-
+    // Unified Admin Dashboard (Displays stats and user list table)
     @GetMapping("/admin/dashboard")
-    public String adminDashboard(
-            Authentication authentication,
-            Model model) {
-
-        User adminUser = userService.findByEmail(
-                authentication.getName()
-        );
+    public String adminDashboard(Authentication authentication, Model model) {
+        User adminUser = userService.findByEmail(authentication.getName());
 
         model.addAttribute("user", adminUser);
-
-        // Total registered users
-        model.addAttribute(
-                "totalUsers",
-                userService.getAllUsers().size()
-        );
-
-        // Temporary book count
+        model.addAttribute("totalUsers", userService.getAllUsers().size());
         model.addAttribute("totalBooks", 10);
-
-        // Total orders from database
-        model.addAttribute(
-                "totalOrders",
-                orderService.getTotalOrders()
-        );
-
-        // Registered users for admin table
-        model.addAttribute(
-                "users",
-                userService.getAllUsers()
-        );
+        model.addAttribute("totalOrders", 0);
+        model.addAttribute("users", userService.getAllUsers()); // Populates the admin user table
 
         return "admin-dashboard";
     }
 
-    // ==========================================
-    // CUSTOMER DASHBOARD
-    // ==========================================
-
+    // Customer Dashboard
     @GetMapping("/customer/dashboard")
-    public String customerDashboard(
-            Authentication authentication,
-            Model model) {
-
-        User user = userService.findByEmail(
-                authentication.getName()
-        );
-
+    public String customerDashboard(Authentication authentication, Model model) {
+        User user = userService.findByEmail(authentication.getName());
         model.addAttribute("user", user);
 
-        // Customer loyalty points
+        // Loyalty points check for Customer entity
         if (user instanceof Customer customer) {
-
-            model.addAttribute(
-                    "loyaltyPoints",
-                    customer.getLoyaltyPoints()
-            );
+            model.addAttribute("loyaltyPoints", customer.getLoyaltyPoints());
         }
 
-        // Temporary book count
         model.addAttribute("totalBooks", 10);
-
-        // Temporary wishlist and cart counts
-        model.addAttribute("wishlistCount", 0);
+        model.addAttribute("wishlistCount", wishlistService.count(authentication.getName()));
         model.addAttribute("cartCount", 0);
 
         return "customer-dashboard";
     }
 
-    // ==========================================
-    // USER MANAGEMENT - READ ALL
-    // ==========================================
-
+    // CRUD Operations UI for User Management table
     @GetMapping("/users")
     public String manageUsers(Model model) {
-
-        model.addAttribute(
-                "users",
-                userService.getAllUsers()
-        );
-
+        model.addAttribute("users", userService.getAllUsers());
         return "users";
     }
 
-    // ==========================================
-    // PROFILE PAGE
-    // ==========================================
-
+    // Profile Page View
     @GetMapping("/profile")
-    public String profilePage(
-            Authentication authentication,
-            Model model) {
-
-        User user = userService.findByEmail(
-                authentication.getName()
-        );
-
+    public String profilePage(Authentication authentication, Model model) {
+        User user = userService.findByEmail(authentication.getName());
         model.addAttribute("user", user);
-
         return "profile";
     }
 
-    // ==========================================
-    // PROFILE UPDATE
-    // ==========================================
+    // Customer order history. Order persistence is not implemented yet, so the
+    // page currently presents a useful empty state instead of returning a 404.
+    @GetMapping("/orders")
+    public String ordersPage(Authentication authentication, Model model) {
+        User user = userService.findByEmail(authentication.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("orderCount", 0);
+        return "orders";
+    }
 
+    // Profile Update Action
     @PostMapping("/profile/update")
-    public String updateProfile(
-            @RequestParam String name,
-            @RequestParam String email,
-            Authentication authentication) {
-
-        User user = userService.findByEmail(
-                authentication.getName()
-        );
-
-        User updated = userService.updateProfile(
-                user.getId(),
-                name,
-                email
-        );
-
+    public String updateProfile(@RequestParam String name, @RequestParam String email, Authentication authentication) {
+        User user = userService.findByEmail(authentication.getName());
+        User updated = userService.updateProfile(user.getId(), name, email);
         if (updated instanceof Admin) {
             return "redirect:/admin/dashboard";
         }
-
         return "redirect:/customer/dashboard";
     }
 
-    // ==========================================
-    // ADMIN - DELETE USER
-    // ==========================================
-
+    // Admin Action: Delete User
     @PostMapping("/admin/users/delete/{id}")
-    public String deleteUser(
-            @PathVariable Long id) {
-
+    public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-
         return "redirect:/admin/dashboard";
     }
 
-    // ==========================================
-    // ADMIN - VIEW USER DETAILS
-    // ==========================================
-
+    // Admin Action: View Single User Details
     @GetMapping("/admin/users/{id}")
-    public String viewUserDetails(
-            @PathVariable Long id,
-            Model model) {
-
+    public String viewUserDetails(@PathVariable Long id, Model model) {
         User targetUser = userService.getUserById(id);
-
-        model.addAttribute(
-                "targetUser",
-                targetUser
-        );
-
+        model.addAttribute("targetUser", targetUser);
         return "admin-user-details";
     }
 }
