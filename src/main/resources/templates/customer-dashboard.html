@@ -99,8 +99,8 @@
         .main-content {
             margin-left: var(--sidebar-width); min-height: 100vh;
             background:
-                radial-gradient(60% 40% at 90% 0%, rgba(22, 88, 123, 0.35), transparent 70%),
-                var(--shade-600);
+                    radial-gradient(60% 40% at 90% 0%, rgba(22, 88, 123, 0.35), transparent 70%),
+                    var(--shade-600);
             color: var(--cream); font-family: var(--font-body);
             position: relative; isolation: isolate;
         }
@@ -187,7 +187,7 @@
             border: 1px solid rgba(132, 179, 206, 0.35);
         }
         .role { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-                background: rgba(132, 179, 206, 0.14); color: var(--rock); border: 1px solid rgba(132, 179, 206, 0.3); }
+            background: rgba(132, 179, 206, 0.14); color: var(--rock); border: 1px solid rgba(132, 179, 206, 0.3); }
         .role-admin { background: rgba(220, 174, 85, 0.14); color: var(--gold-light); border-color: rgba(220, 174, 85, 0.4); }
 
         .btn-primary {
@@ -220,47 +220,47 @@
            Everything is scoped to #bookstore-bg (or bk- classes) so nothing leaks into the rest of the page. */
 
         #bookstore-bg{
-          position:absolute; inset:0; z-index:0; overflow:hidden;
-          --bk-gold:rgba(220,174,85,.65);
-          --bk-lamp:255,214,140;
-          --px:0; --py:0;            /* cursor offset -1..1  (set by bookstore-bg.js) */
-          --mx:50%; --my:50%;        /* lamp position in px  (set by bookstore-bg.js) */
-          background:radial-gradient(120% 90% at 50% 0%, #123a5e 0%, #050f1a 62%);
-          perspective:1100px;
+            position:absolute; inset:0; z-index:0; overflow:hidden;
+            --bk-gold:rgba(220,174,85,.65);
+            --bk-lamp:255,214,140;
+            --px:0; --py:0;            /* cursor offset -1..1  (set by bookstore-bg.js) */
+            --mx:50%; --my:50%;        /* lamp position in px  (set by bookstore-bg.js) */
+            background:radial-gradient(120% 90% at 50% 0%, #123a5e 0%, #050f1a 62%);
+            perspective:1100px;
         }
 
         /* each layer is oversized so parallax never shows an edge */
         #bookstore-bg .bk-layer{
-          position:absolute; inset:-7%; pointer-events:none; will-change:transform;
-          transform:translate3d(calc(var(--px) * var(--d) * -1px), calc(var(--py) * var(--d) * -1px), 0);
+            position:absolute; inset:-7%; pointer-events:none; will-change:transform;
+            transform:translate3d(calc(var(--px) * var(--d) * -1px), calc(var(--py) * var(--d) * -1px), 0);
         }
         #bookstore-bg .bk-rows{height:100%; display:flex; flex-direction:column; justify-content:space-evenly; padding:0 2%}
 
         /* ---------- shelves ---------- */
         #bookstore-bg .bk-shelf{
-          position:relative; display:flex; align-items:flex-end; gap:2px;
-          height:var(--rowh); padding-bottom:14px; white-space:nowrap;
+            position:relative; display:flex; align-items:flex-end; gap:2px;
+            height:var(--rowh); padding-bottom:14px; white-space:nowrap;
         }
         #bookstore-bg .bk-shelf::after{
-          content:""; position:absolute; left:-2%; right:-2%; bottom:0; height:14px;
-          background:linear-gradient(#2b4a69,#18304a 60%,#0a1624);
-          box-shadow:0 10px 18px rgba(0,0,0,.6);
+            content:""; position:absolute; left:-2%; right:-2%; bottom:0; height:14px;
+            background:linear-gradient(#2b4a69,#18304a 60%,#0a1624);
+            box-shadow:0 10px 18px rgba(0,0,0,.6);
         }
         #bookstore-bg .bk-book{
-          position:relative; flex:0 0 auto;
-          width:calc(var(--w) * 1px); height:calc(var(--h) * 1px);
-          border-radius:2px 2px 1px 1px;
-          background:
-            linear-gradient(transparent 11%, var(--bk-gold) 11% 13%, transparent 13% 17%, var(--bk-gold) 17% 18%, transparent 18%),
-            linear-gradient(90deg, rgba(255,255,255,.16), transparent 24%, rgba(0,0,0,.34)),
-            var(--c);
-          box-shadow:inset 0 0 0 1px rgba(0,0,0,.25), 2px 0 3px rgba(0,0,0,.45);
-          transform-origin:50% 100%;
-          transition:transform .45s cubic-bezier(.16,1,.3,1), filter .45s;
+            position:relative; flex:0 0 auto;
+            width:calc(var(--w) * 1px); height:calc(var(--h) * 1px);
+            border-radius:2px 2px 1px 1px;
+            background:
+                    linear-gradient(transparent 11%, var(--bk-gold) 11% 13%, transparent 13% 17%, var(--bk-gold) 17% 18%, transparent 18%),
+                    linear-gradient(90deg, rgba(255,255,255,.16), transparent 24%, rgba(0,0,0,.34)),
+                    var(--c);
+            box-shadow:inset 0 0 0 1px rgba(0,0,0,.25), 2px 0 3px rgba(0,0,0,.45);
+            transform-origin:50% 100%;
+            transition:transform .45s cubic-bezier(.16,1,.3,1), filter .45s;
         }
         #bookstore-bg .bk-book::after{
-          content:""; position:absolute; left:18%; right:18%; top:38%; height:calc(var(--lab) * 1%);
-          background:rgba(243,236,220,.8); border-radius:1px;
+            content:""; position:absolute; left:18%; right:18%; top:38%; height:calc(var(--lab) * 1%);
+            background:rgba(243,236,220,.8); border-radius:1px;
         }
         #bookstore-bg .bk-book.lean{transform-origin:0 100%; transform:rotate(calc(var(--tilt) * 1deg))}
 
@@ -273,20 +273,20 @@
 
         /* ---------- floating books ---------- */
         #bookstore-bg .bk-fb{
-          position:absolute; width:clamp(84px,9.5vw,150px); aspect-ratio:2/3;
-          animation:bkBob var(--t,7s) ease-in-out infinite alternate;
+            position:absolute; width:clamp(84px,9.5vw,150px); aspect-ratio:2/3;
+            animation:bkBob var(--t,7s) ease-in-out infinite alternate;
         }
         #bookstore-bg .bk-fb1{right:9%;  top:44%; --t:7s; --r:7deg}
         #bookstore-bg .bk-fb2{right:25%; top:58%; --t:9s; --r:-6deg; width:clamp(72px,8vw,126px)}
         #bookstore-bg .bk-fb3{left:42%;  top:50%; --t:8s; --r:4deg;  width:clamp(68px,7.5vw,116px)}
         #bookstore-bg .bk-tilt{
-          position:absolute; inset:0; border-radius:3px 7px 7px 3px;
-          display:grid; place-items:center; text-align:center;
-          font:400 clamp(13px,1.35vw,20px)/1.2 "Instrument Serif", Georgia, serif; color:#f3ecdc;
-          transform-style:preserve-3d;
-          transform:rotate(var(--r)) rotateY(calc(var(--px) * 26deg)) rotateX(calc(var(--py) * -20deg));
-          box-shadow:0 30px 50px rgba(0,0,0,.6), inset 6px 0 0 rgba(0,0,0,.28), inset 0 0 0 1px rgba(220,174,85,.5);
-          transition:transform .12s linear;
+            position:absolute; inset:0; border-radius:3px 7px 7px 3px;
+            display:grid; place-items:center; text-align:center;
+            font:400 clamp(13px,1.35vw,20px)/1.2 "Instrument Serif", Georgia, serif; color:#f3ecdc;
+            transform-style:preserve-3d;
+            transform:rotate(var(--r)) rotateY(calc(var(--px) * 26deg)) rotateX(calc(var(--py) * -20deg));
+            box-shadow:0 30px 50px rgba(0,0,0,.6), inset 6px 0 0 rgba(0,0,0,.28), inset 0 0 0 1px rgba(220,174,85,.5);
+            transition:transform .12s linear;
         }
         #bookstore-bg .bk-tilt span{padding:10px 12px; border-top:1px solid var(--bk-gold); border-bottom:1px solid var(--bk-gold)}
         #bookstore-bg .bk-fb1 .bk-tilt{background:linear-gradient(150deg,#1f6fa3,#0f3a5c)}
@@ -297,33 +297,33 @@
         /* ---------- dust motes ---------- */
         #bookstore-bg .bk-dust{position:absolute; inset:0; pointer-events:none}
         #bookstore-bg .bk-mote{
-          position:absolute; bottom:-10px; border-radius:50%;
-          background:rgba(var(--bk-lamp),.85); box-shadow:0 0 6px rgba(var(--bk-lamp),.8);
-          opacity:0; animation:bkRise var(--dur) linear var(--delay) infinite;
+            position:absolute; bottom:-10px; border-radius:50%;
+            background:rgba(var(--bk-lamp),.85); box-shadow:0 0 6px rgba(var(--bk-lamp),.8);
+            opacity:0; animation:bkRise var(--dur) linear var(--delay) infinite;
         }
         @keyframes bkRise{
-          0%{transform:translate3d(0,0,0); opacity:0}
-          12%{opacity:var(--o)}
-          88%{opacity:var(--o)}
-          100%{transform:translate3d(var(--dx),-110vh,0); opacity:0}
+            0%{transform:translate3d(0,0,0); opacity:0}
+            12%{opacity:var(--o)}
+            88%{opacity:var(--o)}
+            100%{transform:translate3d(var(--dx),-110vh,0); opacity:0}
         }
 
         /* ---------- lamp light that follows the cursor ---------- */
         #bookstore-bg .bk-glow{
-          position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
-          background:radial-gradient(circle 360px at var(--mx) var(--my),
+            position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+            background:radial-gradient(circle 360px at var(--mx) var(--my),
             rgba(var(--bk-lamp),.34), rgba(var(--bk-lamp),.10) 45%, transparent 72%);
         }
         #bookstore-bg .bk-shade{
-          position:absolute; inset:0; pointer-events:none;
-          background:radial-gradient(circle 520px at var(--mx) var(--my),
+            position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(circle 520px at var(--mx) var(--my),
             rgba(2,8,16,0) 0%, rgba(2,8,16,.55) 55%, rgba(2,8,16,.9) 100%);
         }
 
         @media (prefers-reduced-motion:reduce){
-          #bookstore-bg .bk-fb, #bookstore-bg .bk-mote{animation:none}
-          #bookstore-bg .bk-mote{opacity:.4; bottom:auto}
-          #bookstore-bg .bk-book, #bookstore-bg .bk-tilt{transition:none}
+            #bookstore-bg .bk-fb, #bookstore-bg .bk-mote{animation:none}
+            #bookstore-bg .bk-mote{opacity:.4; bottom:auto}
+            #bookstore-bg .bk-book, #bookstore-bg .bk-tilt{transition:none}
         }
 
     </style>
@@ -336,6 +336,13 @@
         .t-muted { color: var(--mist); }
         .main-content { background: var(--ink); }
 
+        .book-price {
+            color: #d4af37;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
         /* Glass cards (navy) */
         .glass {
             background: rgba(8, 24, 42, .66);
@@ -347,8 +354,8 @@
         .hero-shade {
             position: absolute; inset: 0; pointer-events: none; z-index: 1;
             background:
-                linear-gradient(180deg, rgba(4,12,22,.82) 0%, rgba(4,12,22,.32) 40%, rgba(4,12,22,0) 68%),
-                linear-gradient(90deg, rgba(4,12,22,.5) 0%, rgba(4,12,22,0) 55%);
+                    linear-gradient(180deg, rgba(4,12,22,.82) 0%, rgba(4,12,22,.32) 40%, rgba(4,12,22,0) 68%),
+                    linear-gradient(90deg, rgba(4,12,22,.5) 0%, rgba(4,12,22,0) 55%);
         }
 
         .stat { transition: border-color .2s, transform .2s; }
@@ -367,8 +374,8 @@
         .cta svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
         .badge-gold { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-                      color: var(--gold-light); background: rgba(220,174,85,.14); border: 1px solid rgba(220,174,85,.4);
-                      border-radius: 999px; padding: .2rem .7rem; margin-bottom: .6rem; }
+            color: var(--gold-light); background: rgba(220,174,85,.14); border: 1px solid rgba(220,174,85,.4);
+            border-radius: 999px; padding: .2rem .7rem; margin-bottom: .6rem; }
 
         a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
@@ -404,6 +411,8 @@
                     <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.2 11h10.3l1.7-8H6.2"/></svg>Cart</a></li>
                 <li><a th:href="@{/orders}">
                     <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/></svg>Orders</a></li>
+                <li><a th:href="@{/reviews}">
+                    <svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.8-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1L3.2 9.4l6.1-.8L12 3z"/></svg>Reviews</a></li>
                 <li><a th:href="@{/profile}">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Profile</a></li>
             </ul>
@@ -516,142 +525,142 @@
 <!-- bookstore background script (replaces mood-field.js) -->
 <script>
     (function () {
-      var bg = document.getElementById('bookstore-bg');
-      if (!bg) return;
-      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var bg = document.getElementById('bookstore-bg');
+        if (!bg) return;
+        var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      /* seeded random: shelves look the same on every load */
-      var seed = 11;
-      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-      function pick(a) { return a[Math.floor(rnd() * a.length)]; }
-      function clamp(v) { return Math.max(-1, Math.min(1, v)); }
+        /* seeded random: shelves look the same on every load */
+        var seed = 11;
+        function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+        function pick(a) { return a[Math.floor(rnd() * a.length)]; }
+        function clamp(v) { return Math.max(-1, Math.min(1, v)); }
 
-      var COLORS = ['#16587B', '#1f74a0', '#0e2842', '#2a7f86', '#3c5f8a',
-                    '#84B3CE', '#c9a24b', '#24465c', '#6b8fa6', '#e6dcc3', '#8f6a26'];
+        var COLORS = ['#16587B', '#1f74a0', '#0e2842', '#2a7f86', '#3c5f8a',
+            '#84B3CE', '#c9a24b', '#24465c', '#6b8fa6', '#e6dcc3', '#8f6a26'];
 
-      /* ---------- shelves ---------- */
-      function buildShelves() {
-        seed = 11;
-        var width = bg.clientWidth || innerWidth;
-        bg.querySelectorAll('.bk-rows').forEach(function (rows) {
-          var n = +rows.dataset.rows, far = rows.dataset.size === 'far';
-          var minH = far ? 70 : 120, maxH = far ? 120 : 200;
-          var minW = far ? 16 : 24,  maxW = far ? 34 : 54;
-          rows.innerHTML = '';
-          for (var r = 0; r < n; r++) {
-            var shelf = document.createElement('div');
-            shelf.className = 'bk-shelf';
-            shelf.style.setProperty('--rowh', (maxH + 40) + 'px');
-            var x = -rnd() * 60, limit = width * 1.2;
-            while (x < limit) {
-              var b = document.createElement('div'), w = minW + rnd() * (maxW - minW);
-              b.className = 'bk-book';
-              b.style.setProperty('--w', w.toFixed(1));
-              b.style.setProperty('--h', (minH + rnd() * (maxH - minH)).toFixed(1));
-              b.style.setProperty('--c', pick(COLORS));
-              b.style.setProperty('--lab', (6 + rnd() * 14).toFixed(0));
-              if (rnd() < 0.07) {
-                b.classList.add('lean');
-                b.style.setProperty('--tilt', (6 + rnd() * 10).toFixed(1));
-              }
-              shelf.appendChild(b);
-              x += w + 2;
-              if (rnd() < 0.05) {
-                var gap = document.createElement('div');
-                gap.style.flex = '0 0 ' + (30 + rnd() * 50) + 'px';
-                shelf.appendChild(gap); x += 60;
-              }
-            }
-            rows.appendChild(shelf);
-          }
-        });
-      }
-
-      /* ---------- dust ---------- */
-      function buildDust() {
-        var dust = bg.querySelector('.bk-dust');
-        dust.innerHTML = '';
-        var count = (bg.clientWidth || innerWidth) < 700 ? 18 : 38;
-        for (var i = 0; i < count; i++) {
-          var m = document.createElement('i'), s = 1.5 + rnd() * 3;
-          m.className = 'bk-mote';
-          m.style.left = (rnd() * 100) + '%';
-          m.style.width = m.style.height = s + 'px';
-          m.style.setProperty('--dur', (14 + rnd() * 18) + 's');
-          m.style.setProperty('--delay', (-rnd() * 30) + 's');
-          m.style.setProperty('--dx', ((rnd() - .5) * 160) + 'px');
-          m.style.setProperty('--o', (.25 + rnd() * .55).toFixed(2));
-          if (reduce) m.style.top = (rnd() * 100) + '%';
-          dust.appendChild(m);
+        /* ---------- shelves ---------- */
+        function buildShelves() {
+            seed = 11;
+            var width = bg.clientWidth || innerWidth;
+            bg.querySelectorAll('.bk-rows').forEach(function (rows) {
+                var n = +rows.dataset.rows, far = rows.dataset.size === 'far';
+                var minH = far ? 70 : 120, maxH = far ? 120 : 200;
+                var minW = far ? 16 : 24,  maxW = far ? 34 : 54;
+                rows.innerHTML = '';
+                for (var r = 0; r < n; r++) {
+                    var shelf = document.createElement('div');
+                    shelf.className = 'bk-shelf';
+                    shelf.style.setProperty('--rowh', (maxH + 40) + 'px');
+                    var x = -rnd() * 60, limit = width * 1.2;
+                    while (x < limit) {
+                        var b = document.createElement('div'), w = minW + rnd() * (maxW - minW);
+                        b.className = 'bk-book';
+                        b.style.setProperty('--w', w.toFixed(1));
+                        b.style.setProperty('--h', (minH + rnd() * (maxH - minH)).toFixed(1));
+                        b.style.setProperty('--c', pick(COLORS));
+                        b.style.setProperty('--lab', (6 + rnd() * 14).toFixed(0));
+                        if (rnd() < 0.07) {
+                            b.classList.add('lean');
+                            b.style.setProperty('--tilt', (6 + rnd() * 10).toFixed(1));
+                        }
+                        shelf.appendChild(b);
+                        x += w + 2;
+                        if (rnd() < 0.05) {
+                            var gap = document.createElement('div');
+                            gap.style.flex = '0 0 ' + (30 + rnd() * 50) + 'px';
+                            shelf.appendChild(gap); x += 60;
+                        }
+                    }
+                    rows.appendChild(shelf);
+                }
+            });
         }
-      }
 
-      buildShelves(); buildDust();
-      var rt, lastW = bg.clientWidth;
-      new ResizeObserver(function () {
-        if (bg.clientWidth === lastW) return;      // only rebuild when the width changes
-        lastW = bg.clientWidth;
-        clearTimeout(rt);
-        rt = setTimeout(function () { buildShelves(); buildDust(); }, 200);
-      }).observe(bg);
-
-      /* ---------- cursor ---------- */
-      var cpx = 0, cpy = 0;                        // last cursor position (viewport px)
-      var tx = 0, ty = 0, cx = 0, cy = 0;          // target / eased parallax offset
-      var mx = 0, my = 0, lx = 0, ly = 0;          // target / eased lamp position (px inside bg)
-      var active = false, moved = false, pulled = null;
-
-      function onMove(e) { active = true; moved = true; cpx = e.clientX; cpy = e.clientY; }
-      addEventListener('pointermove', onMove, { passive: true });
-      addEventListener('pointerdown', onMove, { passive: true });
-      document.addEventListener('pointerleave', function () { active = false; });
-
-      function setPulled(b) {
-        if (pulled === b) return;
-        if (pulled) pulled.classList.remove('pulled');
-        if (b) b.classList.add('pulled');
-        pulled = b;
-      }
-
-      function frame(t) {
-        var rect = bg.getBoundingClientRect();     // re-read each frame so scrolling stays correct
-        if (active) {
-          tx = clamp(((cpx - rect.left) / rect.width)  * 2 - 1);
-          ty = clamp(((cpy - rect.top)  / rect.height) * 2 - 1);
-          mx = cpx - rect.left;  my = cpy - rect.top;
-          if (moved) {                             // pull out the front-shelf book under the cursor
-            moved = false;
-            var inside = cpx >= rect.left && cpx <= rect.right && cpy >= rect.top && cpy <= rect.bottom;
-            var hit = null;
-            if (inside) {
-              var els = document.elementsFromPoint(cpx, cpy);
-              for (var i = 0; i < els.length; i++) {
-                if (els[i].classList.contains('bk-book') && els[i].closest('.bk-mid')) { hit = els[i]; break; }
-              }
+        /* ---------- dust ---------- */
+        function buildDust() {
+            var dust = bg.querySelector('.bk-dust');
+            dust.innerHTML = '';
+            var count = (bg.clientWidth || innerWidth) < 700 ? 18 : 38;
+            for (var i = 0; i < count; i++) {
+                var m = document.createElement('i'), s = 1.5 + rnd() * 3;
+                m.className = 'bk-mote';
+                m.style.left = (rnd() * 100) + '%';
+                m.style.width = m.style.height = s + 'px';
+                m.style.setProperty('--dur', (14 + rnd() * 18) + 's');
+                m.style.setProperty('--delay', (-rnd() * 30) + 's');
+                m.style.setProperty('--dx', ((rnd() - .5) * 160) + 'px');
+                m.style.setProperty('--o', (.25 + rnd() * .55).toFixed(2));
+                if (reduce) m.style.top = (rnd() * 100) + '%';
+                dust.appendChild(m);
             }
-            setPulled(hit);
-          }
-        } else {
-          setPulled(null);
-          if (!reduce) {                           // no cursor (touch / left window): gentle drift
-            tx = Math.sin(t / 4200) * 0.55;
-            ty = Math.cos(t / 5300) * 0.35;
-            mx = rect.width  * (0.5 + tx * 0.30);
-            my = rect.height * (0.5 + ty * 0.30);
-          }
         }
-        var ease = reduce ? 1 : 0.07;
-        cx += (tx - cx) * ease;  cy += (ty - cy) * ease;
-        lx += (mx - lx) * (reduce ? 1 : 0.12);
-        ly += (my - ly) * (reduce ? 1 : 0.12);
 
-        bg.style.setProperty('--px', cx.toFixed(4));
-        bg.style.setProperty('--py', cy.toFixed(4));
-        bg.style.setProperty('--mx', lx.toFixed(1) + 'px');
-        bg.style.setProperty('--my', ly.toFixed(1) + 'px');
+        buildShelves(); buildDust();
+        var rt, lastW = bg.clientWidth;
+        new ResizeObserver(function () {
+            if (bg.clientWidth === lastW) return;      // only rebuild when the width changes
+            lastW = bg.clientWidth;
+            clearTimeout(rt);
+            rt = setTimeout(function () { buildShelves(); buildDust(); }, 200);
+        }).observe(bg);
+
+        /* ---------- cursor ---------- */
+        var cpx = 0, cpy = 0;                        // last cursor position (viewport px)
+        var tx = 0, ty = 0, cx = 0, cy = 0;          // target / eased parallax offset
+        var mx = 0, my = 0, lx = 0, ly = 0;          // target / eased lamp position (px inside bg)
+        var active = false, moved = false, pulled = null;
+
+        function onMove(e) { active = true; moved = true; cpx = e.clientX; cpy = e.clientY; }
+        addEventListener('pointermove', onMove, { passive: true });
+        addEventListener('pointerdown', onMove, { passive: true });
+        document.addEventListener('pointerleave', function () { active = false; });
+
+        function setPulled(b) {
+            if (pulled === b) return;
+            if (pulled) pulled.classList.remove('pulled');
+            if (b) b.classList.add('pulled');
+            pulled = b;
+        }
+
+        function frame(t) {
+            var rect = bg.getBoundingClientRect();     // re-read each frame so scrolling stays correct
+            if (active) {
+                tx = clamp(((cpx - rect.left) / rect.width)  * 2 - 1);
+                ty = clamp(((cpy - rect.top)  / rect.height) * 2 - 1);
+                mx = cpx - rect.left;  my = cpy - rect.top;
+                if (moved) {                             // pull out the front-shelf book under the cursor
+                    moved = false;
+                    var inside = cpx >= rect.left && cpx <= rect.right && cpy >= rect.top && cpy <= rect.bottom;
+                    var hit = null;
+                    if (inside) {
+                        var els = document.elementsFromPoint(cpx, cpy);
+                        for (var i = 0; i < els.length; i++) {
+                            if (els[i].classList.contains('bk-book') && els[i].closest('.bk-mid')) { hit = els[i]; break; }
+                        }
+                    }
+                    setPulled(hit);
+                }
+            } else {
+                setPulled(null);
+                if (!reduce) {                           // no cursor (touch / left window): gentle drift
+                    tx = Math.sin(t / 4200) * 0.55;
+                    ty = Math.cos(t / 5300) * 0.35;
+                    mx = rect.width  * (0.5 + tx * 0.30);
+                    my = rect.height * (0.5 + ty * 0.30);
+                }
+            }
+            var ease = reduce ? 1 : 0.07;
+            cx += (tx - cx) * ease;  cy += (ty - cy) * ease;
+            lx += (mx - lx) * (reduce ? 1 : 0.12);
+            ly += (my - ly) * (reduce ? 1 : 0.12);
+
+            bg.style.setProperty('--px', cx.toFixed(4));
+            bg.style.setProperty('--py', cy.toFixed(4));
+            bg.style.setProperty('--mx', lx.toFixed(1) + 'px');
+            bg.style.setProperty('--my', ly.toFixed(1) + 'px');
+            requestAnimationFrame(frame);
+        }
         requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
     })();
 
 </script>

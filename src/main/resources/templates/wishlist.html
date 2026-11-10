@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wishlist - Bookstore</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}"><link rel="stylesheet" th:href="@{/css/wishlist.css}">
+</head>
+<body>
+<div th:replace="~{fragments/customer-sidebar :: sidebar('wishlist')}"></div>
+<main class="main-content"><div class="page">
+    <header class="page-head"><div><p class="eyebrow">Saved for later</p><h1>Your <span class="accent">wishlist</span></h1><p class="page-sub">Books marked for future reading.</p></div><a class="btn-primary" th:href="@{/wishlist/add}">Add a book</a></header>
+    <div class="flash" th:if="${message}" th:text="${message}"></div><div class="flash-error" th:if="${error}" th:text="${error}"></div>
+    <div class="stats-grid">
+        <div class="stat-card"><span class="label">Books saved</span><span class="value" th:text="${wishlistCount}">0</span></div>
+        <div class="stat-card"><span class="label">Must-read books</span><span class="value" th:text="${mustReadCount}">0</span></div>
+        <div class="stat-card"><span class="label">Total value</span><span class="value" th:text="'LKR ' + ${#numbers.formatDecimal(wishlistTotal,1,2)}">LKR 0.00</span></div>
+    </div>
+    <section class="panel">
+        <div class="empty" th:if="${wishlistCount == 0}"><h2>Your wishlist is empty</h2><p>Save books so you can find them again.</p><a class="btn-primary" th:href="@{/wishlist/add}">Add your first book</a></div>
+        <div th:unless="${wishlistCount == 0}">
+            <div class="toolbar"><input id="wishlist-search" class="search" type="search" placeholder="Search title or author">
+                <form th:action="@{/wishlist}" method="get"><input type="hidden" name="type" th:value="${type}"><select class="select" name="sort" onchange="this.form.submit()"><option value="priority" th:selected="${sort == 'priority'}">Most important</option><option value="newest" th:selected="${sort == 'newest'}">Newest</option><option value="title" th:selected="${sort == 'title'}">Title</option><option value="price_asc" th:selected="${sort == 'price_asc'}">Lowest price</option><option value="price_desc" th:selected="${sort == 'price_desc'}">Highest price</option></select></form>
+                <form th:action="@{/wishlist/clear}" method="post" onsubmit="return confirm('Clear your wishlist?')"><button class="btn-delete" type="submit">Clear all</button></form>
+            </div>
+            <nav class="tabs"><a class="tab" th:classappend="${type == 'ALL'} ? 'active'" th:href="@{/wishlist(type='ALL',sort=${sort})}">All</a><a class="tab" th:classappend="${type == 'PRIORITY'} ? 'active'" th:href="@{/wishlist(type='PRIORITY',sort=${sort})}">Must read</a><a class="tab" th:classappend="${type == 'GIFT'} ? 'active'" th:href="@{/wishlist(type='GIFT',sort=${sort})}">Gifts</a><a class="tab" th:classappend="${type == 'STANDARD'} ? 'active'" th:href="@{/wishlist(type='STANDARD',sort=${sort})}">Saved</a></nav>
+            <div id="wishlist-grid" class="book-grid">
+                <article class="book-card" th:each="item : ${wishlistItems}" th:attr="data-search=${#strings.toLowerCase(item.book.title + ' ' + item.book.author)}">
+                    <div class="cover-wrap"><span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(item.typeCode)}" th:text="${item.typeLabel}">Saved</span><img th:src="${item.book.coverOrPlaceholder}" th:alt="${item.book.title}"></div>
+                    <div class="book-meta"><small th:text="${item.book.category}">Category</small><h3 th:text="${item.book.title}">Title</h3><p th:text="${item.book.author}">Author</p><strong th:text="${item.highlight}">Saved</strong><p th:if="${item.note}" th:text="${item.note}"></p></div>
+                    <div class="price-row"><span th:text="'LKR ' + ${#numbers.formatDecimal(item.book.price,1,2)}">LKR 0</span><span th:if="${item.book.rating}" th:text="'★ ' + ${item.book.rating}">★</span></div>
+                    <div class="actions"><a class="btn-ghost" th:href="@{/books/view/{id}(id=${item.book.id})}">View</a><a class="btn-ghost" th:href="@{/wishlist/edit/{id}(id=${item.id})}">Edit</a><form th:action="@{/wishlist/remove/{id}(id=${item.id})}" method="post"><button class="btn-delete" type="submit">Remove</button></form></div>
+                </article>
+            </div>
+        </div>
+    </section>
+</div></main>
+<script>const q=document.getElementById('wishlist-search');if(q)q.addEventListener('input',()=>document.querySelectorAll('#wishlist-grid .book-card').forEach(c=>c.hidden=!c.dataset.search.includes(q.value.trim().toLowerCase())));</script>
+</body></html>

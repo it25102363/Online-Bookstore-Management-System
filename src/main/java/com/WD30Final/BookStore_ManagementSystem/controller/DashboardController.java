@@ -5,6 +5,7 @@ import com.WD30Final.BookStore_ManagementSystem.entity.Admin;
 import com.WD30Final.BookStore_ManagementSystem.entity.Customer;
 import com.WD30Final.BookStore_ManagementSystem.entity.User;
 import com.WD30Final.BookStore_ManagementSystem.services.UserService;
+import com.WD30Final.BookStore_ManagementSystem.services.WishlistService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class DashboardController {
 
     private final UserService userService;
+    private final WishlistService wishlistService;
 
-    public DashboardController(UserService userService) {
+    public DashboardController(UserService userService, WishlistService wishlistService) {
         this.userService = userService;
+        this.wishlistService = wishlistService;
     }
 
     // Unified Admin Dashboard (Displays stats and user list table)
@@ -45,7 +48,7 @@ public class DashboardController {
         }
 
         model.addAttribute("totalBooks", 10);
-        model.addAttribute("wishlistCount", 0);
+        model.addAttribute("wishlistCount", wishlistService.count(authentication.getName()));
         model.addAttribute("cartCount", 0);
 
         return "customer-dashboard";
@@ -64,6 +67,16 @@ public class DashboardController {
         User user = userService.findByEmail(authentication.getName());
         model.addAttribute("user", user);
         return "profile";
+    }
+
+    // Customer order history. Order persistence is not implemented yet, so the
+    // page currently presents a useful empty state instead of returning a 404.
+    @GetMapping("/orders")
+    public String ordersPage(Authentication authentication, Model model) {
+        User user = userService.findByEmail(authentication.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("orderCount", 0);
+        return "orders";
     }
 
     // Profile Update Action

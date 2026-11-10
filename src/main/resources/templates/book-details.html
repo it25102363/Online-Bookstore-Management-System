@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${book.title} + ' | The Bookstore'">
+        Book Details
+    </title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            color: #f3f4f7;
+            background: radial-gradient(
+                    ellipse at top right,
+                    #17324b,
+                    #080f1d 65%
+            );
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 35px;
+            color: #d9b76e;
+            text-decoration: none;
+        }
+
+        .book-panel {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 55px;
+            padding: 45px;
+            border: 1px solid rgba(217,183,110,.25);
+            border-radius: 20px;
+            background: #101c30;
+        }
+
+        .cover {
+            width: 100%;
+            max-height: 430px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 12px 15px 30px #0006;
+        }
+
+        .placeholder {
+            min-height: 390px;
+            display: grid;
+            place-items: center;
+            background: #18324b;
+            border-radius: 10px;
+            font-size: 60px;
+        }
+
+        .category {
+            color: #d9b76e;
+            letter-spacing: 2px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            font-size: 42px;
+            line-height: 1.2;
+            margin: 18px 0;
+        }
+
+        .author {
+            color: #a6b8cd;
+            font-size: 17px;
+        }
+
+        .price {
+            color: #e5c17a;
+            font-size: 30px;
+            font-weight: bold;
+            margin: 35px 0 20px;
+        }
+
+        .details {
+            border-top: 1px solid #33465e;
+            padding-top: 25px;
+            line-height: 2.2;
+            color: #c8d3e1;
+        }
+
+        .stock {
+            color: #78d9ac;
+            font-weight: bold;
+        }
+
+        .sold-out {
+            color: #f18d93;
+        }
+
+        @media (max-width: 700px) {
+            .book-panel {
+                grid-template-columns: 1fr;
+                padding: 25px;
+                gap: 25px;
+            }
+
+            .cover {
+                max-width: 280px;
+            }
+
+            h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back" th:href="@{/books}">
+        ← Back to Book Collection
+    </a>
+
+    <div class="book-panel">
+
+        <div>
+            <img class="cover"
+                 th:if="${book.imageName != null and !book.imageName.isEmpty()}"
+                 th:src="@{/book-covers/{name}(name=${book.imageName})}"
+                 alt="Book Cover">
+
+            <div class="placeholder"
+                 th:unless="${book.imageName != null and !book.imageName.isEmpty()}">
+                📖
+            </div>
+        </div>
+
+        <div>
+            <div class="category"
+                 th:text="${book.category}">
+                Fiction
+            </div>
+
+            <h1 th:text="${book.title}">
+                Book Title
+            </h1>
+
+            <p class="author">
+                By <span th:text="${book.author}">Author</span>
+            </p>
+
+            <div class="price">
+                Rs.
+                <span th:text="${#numbers.formatDecimal(book.price, 1, 2)}">
+                    0.00
+                </span>
+            </div>
+
+            <div class="details">
+                <div>
+                    <strong>ISBN:</strong>
+                    <span th:text="${book.isbn}"></span>
+                </div>
+
+                <div>
+                    <strong>Category:</strong>
+                    <span th:text="${book.category}"></span>
+                </div>
+
+                <div>
+                    <strong>Availability:</strong>
+
+                    <span class="stock"
+                          th:if="${book.quantity > 0}"
+                          th:text="${book.quantity} + ' copies available'">
+                    </span>
+
+                    <span class="sold-out"
+                          th:if="${book.quantity == 0}">
+                        Sold Out
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
