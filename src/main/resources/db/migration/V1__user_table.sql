@@ -1,4 +1,4 @@
-CREATE TABLE `bookstoresystem`.`users` (
+CREATE TABLE `users` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `user_type` VARCHAR(45) NOT NULL,
   `name` VARCHAR(255) NOT NULL,

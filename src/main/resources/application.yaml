@@ -5,6 +5,7 @@ spring:
     url: jdbc:mysql://localhost:3306/BookStoreSystem?createDatabaseIfNotExist=true
     username: root
     password: ""
+    password: Zuwa123@
 
   jpa:
     hibernate:

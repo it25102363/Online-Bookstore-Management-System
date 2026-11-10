@@ -120,7 +120,7 @@
                 <configuration>
                     <url>jdbc:mysql://localhost:3306/BookStoreSystem?createDatabaseIfNotExist=true</url>
                     <user>root</user>
-                    <password>@Raneesha2006</password>
+                    <password>Zuwa123@</password>
                     <cleanDisabled>false</cleanDisabled>
                 </configuration>
 

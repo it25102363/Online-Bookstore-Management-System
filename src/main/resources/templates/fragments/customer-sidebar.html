@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside class="sidebar" th:fragment="sidebar(active)">
+    <div class="sidebar-top">
+        <div class="logo-area">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5zM21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/></svg>
+            Bookstore
+        </div>
+        <nav aria-label="Customer navigation">
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/customer/dashboard}" th:classappend="${active == 'home'} ? 'active'">Home</a></li>
+                <li><a th:href="@{/books}" th:classappend="${active == 'books'} ? 'active'">Books</a></li>
+                <li><a th:href="@{/wishlist}" th:classappend="${active == 'wishlist'} ? 'active'">Wishlist</a></li>
+                <li><a th:href="@{/orders}" th:classappend="${active == 'orders'} ? 'active'">Orders</a></li>
+                <li><a th:href="@{/profile}" th:classappend="${active == 'profile'} ? 'active'">Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post"><button class="btn-danger" type="submit">Logout</button></form>
+    </div>
+</aside>
+</body>
+</html>

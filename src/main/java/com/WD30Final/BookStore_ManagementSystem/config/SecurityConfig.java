@@ -70,6 +70,11 @@ public class SecurityConfig {
                         ).hasRole("CUSTOMER")
 
                         // All remaining pages require login
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**", "/users/**").hasRole("ADMIN")
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                        .requestMatchers("/wishlist/**").hasRole("CUSTOMER")
+                        .requestMatchers("/customer/**","/orders","/orders/**","/reviews/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated()
                 )
 
