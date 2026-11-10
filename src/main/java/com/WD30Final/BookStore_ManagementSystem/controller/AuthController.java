@@ -17,31 +17,35 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // Render the Login page
+    // Show Login Page
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
-    // Render the Register page and provide an empty Customer object for form binding
+    // Show Registration Page
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("user", new Customer());
         return "register";
     }
 
-    // Process new user registrations (automatically saved as a Customer)
+    // Register new Customer
     @PostMapping("/register")
-    public String register(@RequestParam String name,
-                           @RequestParam String email,
-                           @RequestParam String password) {
+    public String register(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam String password) {
 
         Customer customer = new Customer();
+
         customer.setName(name);
         customer.setEmail(email);
-        customer.setLoyaltyPoints(50); // Default welcome points
+        customer.setPassword(password);
+        customer.setLoyaltyPoints(50);
 
-        userService.saveUser(customer, password);
+        // UserService encrypts the password and saves the user
+        userService.saveUser(customer);
 
         return "redirect:/login?registered";
     }

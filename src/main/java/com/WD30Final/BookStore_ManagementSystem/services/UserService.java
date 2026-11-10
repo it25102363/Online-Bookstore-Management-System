@@ -1,6 +1,5 @@
 package com.WD30Final.BookStore_ManagementSystem.services;
 
-
 import com.WD30Final.BookStore_ManagementSystem.entity.Admin;
 import com.WD30Final.BookStore_ManagementSystem.entity.User;
 import com.WD30Final.BookStore_ManagementSystem.repository.UserRepository;
@@ -38,34 +37,35 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    // Create / Register Operation
-    public User saveUser(User user, String rawPassword) {
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        return userRepository.save(user);
-    }
-
-    // Read Operations
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-    // Get user by ID (needed for admin view details)
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
 
-    // Update Operation
-    public User updateProfile(Long id, String name, String email) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setName(name);
-        user.setEmail(email);
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    // Delete Operation
+    public User updateProfile(Long id, String email, String password) {
+        User user = getUserById(id);
+        if (user != null) {
+            user.setEmail(email);
+            if (password != null && !password.isEmpty()) {
+                user.setPassword(passwordEncoder.encode(password));
+            }
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

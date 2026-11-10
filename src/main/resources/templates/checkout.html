@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout - Bookstore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-top">
+        <div class="logo-area">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 5c2.5-1.2 5.5-1.2 8 .5v14c-2.5-1.7-5.5-1.7-8-.5V5z"/>
+                <path d="M21 5c-2.5-1.2-5.5-1.2-8 .5v14c2.5-1.7 5.5-1.7 8 .5V5z"/>
+            </svg>
+            Bookstore
+        </div>
+        <div>
+            <p class="sidebar-label">Browse</p>
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/customer/dashboard}">Home</a></li>
+                <li><a th:href="@{/books}">Books</a></li>
+                <li><a th:href="@{/cart}" class="active">Cart & Checkout</a></li>
+                <li><a th:href="@{/orders}">Orders</a></li>
+                <li><a th:href="@{/cards}">Payment Cards</a></li>
+                <li><a th:href="@{/profile}">Profile</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-danger" style="width:100%; cursor:pointer;">Logout</button>
+        </form>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="page" style="max-width: 800px;">
+        <header class="page-head">
+            <div>
+                <p class="eyebrow">Secure Order</p>
+                <h1>Finalize <span class="accent">Checkout</span></h1>
+                <p class="page-sub">Select a saved payment card to complete your literary purchase.</p>
+            </div>
+        </header>
+
+        <!-- Order Summary Box -->
+        <div class="panel" style="margin-bottom: 2rem;">
+            <div class="panel-head">
+                <div>
+                    <h2>Order Summary</h2>
+                    <p>Review your total amount due</p>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; padding: 1rem 0; border-top: 1px solid var(--line);">
+                <span style="color: var(--mist);">Total Cart Amount:</span>
+                <span style="font-family: var(--font-display); font-size: 1.5rem; color: var(--gold);" th:text="'$' + ${cartTotal}">$45.00</span>
+            </div>
+        </div>
+
+        <!-- Payment Method Selection Form -->
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Choose Payment Card</h2>
+                    <p>Pick from your saved wallet cards</p>
+                </div>
+            </div>
+
+            <form th:action="@{/checkout/process}" method="post">
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div th:each="card : ${cards}" style="display: flex; align-items: center; gap: 1rem; background: var(--shade-900); padding: 1rem; border: 1px solid var(--border); border-radius: 12px;">
+                        <input type="radio" name="cardId" th:value="${card.id}" required style="accent-color: var(--gold); transform: scale(1.2);" />
+                        <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: var(--cream);" th:text="${card.cardBrand}">Visa</strong>
+                                <span style="font-family: monospace; margin-left: 1rem; color: var(--mist);" th:text="${card.cardNumber}">•••• •••• •••• 4242</span>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--mist-dim);" th:text="'Exp: ' + ${card.expiryDate}">12/28</span>
+                        </div>
+                    </div>
+
+                    <div th:if="${cards == null or cards.empty}" style="text-align: center; padding: 1.5rem; color: var(--mist);">
+                        <p>No saved cards available.</p>
+                        <a th:href="@{/cards}" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Add a Payment Card First</a>
+                    </div>
+                </div>
+
+                <div th:if="${cards != null and !cards.empty}">
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Complete Secure Purchase</button>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</main>
+
+</body>
+</html>
