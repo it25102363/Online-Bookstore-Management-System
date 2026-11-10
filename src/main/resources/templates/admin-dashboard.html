@@ -24,7 +24,7 @@
             <ul class="sidebar-menu">
                 <li><a th:href="@{/admin/dashboard}" class="active">
                     <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a></li>
-                <li><a th:href="@{/books}">
+                <li><a th:href="@{/admin/inventory}">
                     <svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg>Inventory</a></li>
                 <li><a th:href="@{/admin/feedback}">
                     <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></svg>Feedback</a></li>
@@ -48,7 +48,7 @@
                 <h1><span id="greeting">Welcome back</span>, <span class="accent" th:text="${user != null ? user.name : 'System Admin'}">System Admin</span></h1>
                 <p class="page-sub">Here is how your bookstore is doing today.</p>
             </div>
-            <a th:href="@{/books}" class="btn-primary">
+            <a th:href="@{/admin/inventory}" class="btn-primary">
                 <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Manage inventory
             </a>
         </header>
@@ -79,7 +79,7 @@
 
         <!-- Quick links -->
         <div class="quick">
-            <a th:href="@{/books}" class="quick-card">
+            <a th:href="@{/admin/inventory}" class="quick-card">
                 <span class="stat-ico"><svg viewBox="0 0 24 24"><path d="M5 4h13a1 1 0 0 1 1 1v14H6a1 1 0 0 0-1 1V4z"/><path d="M9 8h6"/></svg></span>
                 <div><strong>Inventory</strong><small>Add, edit and remove books</small></div>
             </a>
